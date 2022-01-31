@@ -1,0 +1,55 @@
+/* height */
+.ht-1 {
+  height: 100px;
+}
+.ht-2 {
+  height: 200px;
+}
+.ht-3 {
+  height: 300px;
+}
+.ht-4 {
+  height: 400px;
+}
+.ht-4 {
+  height: 500px;
+}
+.ht-5 {
+  height: 600px;
+}
+
+/* width */
+.wd-1 {
+  width: 100px;
+}
+.wd-2 {
+  width: 200px;
+}
+.wd-3 {
+  width: 300px;
+}
+.wd-4 {
+  width: 400px;
+}
+.wd-4 {
+  width: 500px;
+}
+.wd-5 {
+  width: 600px;
+}
+/* BG-COLORS */
+.bg-white {
+  background-color: white;
+}
+.bg-dark {
+  background-color: #191919;
+}
+.bg-dark-blue {
+  background-color: white;
+}
+.bg-white {
+  background-color: white;
+}
+.bg-yellow {
+  background-color: #f0a500;
+}
