@@ -1,31 +1,29 @@
 import { React, Component } from "react";
+
+import { Box, Button, ImageList, ImageListItem } from "@mui/material";
+import imagens from "./img.js";
 import "./main.css";
 import "./jox.css";
-import Card from "./Card";
-import { Grid, Box } from "@mui/material";
+
+const xicaras = imagens.xicara;
 
 class Main extends Component {
   render() {
     return (
-      <div className="bg-white" container>
-        <div>
-          <Box className="ht-3" style={{ display: "inline" }}>
-            <Grid xs={3}>
-              <Card />
-              <Card />
-            </Grid>
-            <Grid xs={3}>
-              <Card />
-            </Grid>
-            <Grid xs={3}>
-              <Card />
-            </Grid>
-            <Grid xs={3}>
-              <Card />
-            </Grid>
-          </Box>
-        </div>
-      </div>
+      <Box
+        className="bg-white"
+        style={{ marginTop: 70, justifyContent: "center" }}
+      >
+        <ImageList sx={{ width: 950, height: 450 }} cols={3} rowHeight={300}>
+          {xicaras.map((xicara, index) => {
+            return (
+              <ImageListItem key={index}>
+                <img src={xicara} style={{ width: 300 }} />
+              </ImageListItem>
+            );
+          })}
+        </ImageList>
+      </Box>
     );
   }
 }
