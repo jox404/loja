@@ -1,5 +1,5 @@
 import { React, Component } from "react";
-import "./section.css";
+import "./jox.css";
 
 import Main from "./Main";
 import Header from "./Header";
@@ -10,13 +10,12 @@ class Section extends Component {
     return (
       <>
         <div
-          className="bg-pink"
+          className="bg-dark"
           style={{
             paddingLeft: 150,
             paddingRight: 150,
             position: "fixed",
             height: "100%",
-            width: "75.2vw",
           }}
         >
           <Header />
