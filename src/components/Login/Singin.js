@@ -2,11 +2,14 @@ import { React, Component } from "react";
 import {
   Avatar,
   Grid,
-  Paper,
   Typography,
   Box,
-  CssBaseline,
   TextField,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  Button,
+  Link,
 } from "@mui/material";
 
 import imagens from "../home/img";
@@ -27,12 +30,11 @@ class Singin extends Component {
         >
           <Grid
             item
-            xs={0}
-            sm={0}
             md={7}
             lg={7}
             xl={7}
             sx={{
+              display: { xl: "none" },
               backgroundImage:
                 "url(https://images.pexels.com/photos/8697430/pexels-photo-8697430.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940)",
             }}
@@ -47,23 +49,43 @@ class Singin extends Component {
             sx={{ backgroundColor: "#fff" }}
             justifyContent={"center"}
           >
-            <Box componet="form" sx={{ mt: 10, mx: 2 }}>
-              <Typography
-                variant="h5"
-                sx={{ color: "#2666CF" }}
-                alignContent={"center"}
+            <Box componet="form" sx={{ mt: 10, mx: 2 }} id="formValidation">
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  my: 2,
+                  p: 1,
+                }}
               >
-                <Avatar
-                  sx={{ width: 40, height: 40, bgcolor: "#8A39E1" }}
-                  aling
+                <Typography
+                  variant="h5"
+                  sx={{ color: "#2666CF" }}
+                  alignContent={"center"}
                 >
-                  <LockOutlined />
-                </Avatar>
-                Sing in
-              </Typography>
+                  <Avatar
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      bgcolor: "#8A39E1",
+                      m: 1,
+                      ml: 2,
+                    }}
+                    aling
+                  >
+                    <LockOutlined />
+                  </Avatar>
+                  Sing in
+                </Typography>
+              </Box>
               <Grid container item spacing={2} xs={12}>
                 <Grid item xs={12}>
-                  <TextField id="email" name="email" label="Email" fullWidth />
+                  <TextField
+                    id="email"
+                    name="email"
+                    label="Email Address"
+                    fullWidth
+                  />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -72,6 +94,43 @@ class Singin extends Component {
                     label="Password"
                     fullWidth
                   />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Remember me"
+                    ></FormControlLabel>
+                  </FormGroup>
+                </Grid>
+                <Grid item xs={12} sx={{ mx: 0, px: 0 }}>
+                  <Button variant="contained" fullWidth>
+                    Sing in
+                  </Button>
+                </Grid>
+                {/* Forgot password?
+Don't have an account? Sign Up
+Copyright © Your Website 2022. */}
+                <Grid item container>
+                  <Grid item xs={12} sm={6}>
+                    <Typography textAlign={"left"}>
+                      <Link href="#">Forgot password?</Link>
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Typography textAlign={"left"}>
+                      <Link href="#">Don't have an account? Sign Up</Link>
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} justifyContent={"center"} sx={{ mt: 6 }}>
+                    <Typography variant={"body2"} sx={{ color: "#606060" }}>
+                      Copyright ©
+                      <Link href="#" color={"inherit"}>
+                        Your Website
+                      </Link>
+                      2022.
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Grid>
             </Box>
