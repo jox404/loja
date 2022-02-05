@@ -1,4 +1,5 @@
 import { React, Component } from 'react';
+
 import {
   Avatar,
   Grid,
@@ -10,14 +11,13 @@ import {
   Checkbox,
   Button,
   Link,
+  InputAdornment,
+  IconButton,
 } from '@mui/material';
 
-import imagens from '../home/img';
 import { LockOutlined } from '@mui/icons-material';
-import { bgcolor } from '@mui/system';
-
-const xicaras = imagens.xicara[0];
-console.log(xicaras);
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 class Singin extends Component {
   render() {
     return (
@@ -78,7 +78,6 @@ class Singin extends Component {
                       m: 1,
                       ml: 2,
                     }}
-                    aling
                   >
                     <LockOutlined />
                   </Avatar>
@@ -88,6 +87,7 @@ class Singin extends Component {
               <Grid container item spacing={2} xs={12}>
                 <Grid item xs={12}>
                   <TextField
+                    type='email'
                     id='email'
                     name='email'
                     label='Email Address'
@@ -101,8 +101,18 @@ class Singin extends Component {
                     name='password'
                     label='Password'
                     fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          <IconButton>
+                            <VisibilityIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </Grid>
+
                 <Grid item xs={12}>
                   <FormGroup>
                     <FormControlLabel
