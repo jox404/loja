@@ -1,4 +1,4 @@
-import { React, Component } from "react";
+import { React, Component } from 'react';
 
 import {
   Box,
@@ -6,12 +6,12 @@ import {
   ImageList,
   ImageListItem,
   ImageListItemBar,
-} from "@mui/material";
+} from '@mui/material';
 
-import imagens from "./img.js";
-import texts from "./texts.js";
-import "./main.css";
-import "./jox.css";
+import imagens from './img.js';
+import texts from './texts.js';
+import './main.css';
+import './jox.css';
 
 const xicaras = imagens.xicara;
 const mensages = texts.mensage;
@@ -20,8 +20,8 @@ class Main extends Component {
   render() {
     return (
       <Box
-        className="bg-white"
-        style={{ marginTop: 70, justifyContent: "center" }}
+        className='bg-white'
+        style={{ marginTop: 70, justifyContent: 'center' }}
       >
         <ImageList sx={{ width: 950, height: 600 }} cols={3} rowHeight={300}>
           {xicaras.map((xicara, index) => {
@@ -33,8 +33,8 @@ class Main extends Component {
                 />
 
                 <ImageListItemBar
-                  title={"teste"}
-                  subtitle={"teste"}
+                  title={'teste'}
+                  subtitle={'teste'}
                   style={{ margin: 0, padding: 0 }}
                 />
               </ImageListItem>
