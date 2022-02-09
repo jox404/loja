@@ -1,4 +1,4 @@
-import { React, Component } from 'react';
+import { React, Component } from "react";
 
 import {
   Avatar,
@@ -13,19 +13,19 @@ import {
   Link,
   InputAdornment,
   IconButton,
-} from '@mui/material';
+} from "@mui/material";
 
-import { LockOutlined } from '@mui/icons-material';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import { LockOutlined } from "@mui/icons-material";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 class Singin extends Component {
   render() {
     return (
       <>
         <Grid
           container
-          component='main'
-          sx={{ height: '100vh', backgroundColor: '#303030' }}
+          component="main"
+          sx={{ height: "100vh", backgroundColor: "#303030" }}
           spacing={2}
         >
           <Grid
@@ -35,15 +35,15 @@ class Singin extends Component {
             xl={7}
             sx={{
               display: {
-                xs: 'none',
-                md: 'flex',
-                lg: 'flex',
-                xl: 'flex',
+                xs: "none",
+                md: "flex",
+                lg: "flex",
+                xl: "flex",
               },
               backgroundImage:
-                'url(https://images.pexels.com/photos/8697430/pexels-photo-8697430.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940)',
-              backgroundSize: '100% 100vh',
-              backgroundRepeat: 'no-repeat',
+                "url(https://images.pexels.com/photos/8697430/pexels-photo-8697430.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940)",
+              backgroundSize: "100% 100vh",
+              backgroundRepeat: "no-repeat",
             }}
           />
           <Grid
@@ -53,28 +53,28 @@ class Singin extends Component {
             md={5}
             lg={5}
             xl={5}
-            sx={{ backgroundColor: '#fff' }}
-            justifyContent={'center'}
+            sx={{ backgroundColor: "#fff" }}
+            justifyContent={"center"}
           >
-            <Box componet='form' sx={{ mt: 10, mx: 2 }} id='formValidation'>
+            <Box componet="form" sx={{ mt: 10, mx: 2 }} id="formValidation">
               <Box
                 sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
+                  display: "flex",
+                  justifyContent: "center",
                   my: 2,
                   p: 1,
                 }}
               >
                 <Typography
-                  variant='h5'
-                  sx={{ color: '#2666CF' }}
-                  alignContent={'center'}
+                  variant="h5"
+                  sx={{ color: "#2666CF" }}
+                  alignContent={"center"}
                 >
                   <Avatar
                     sx={{
                       width: 40,
                       height: 40,
-                      bgcolor: '#8A39E1',
+                      bgcolor: "#8A39E1",
                       m: 1,
                       ml: 2,
                     }}
@@ -87,23 +87,23 @@ class Singin extends Component {
               <Grid container item spacing={2} xs={12}>
                 <Grid item xs={12}>
                   <TextField
-                    type='email'
-                    id='email'
-                    name='email'
-                    label='Email Address'
+                    type="email"
+                    id="email"
+                    name="email"
+                    label="Email Address"
                     fullWidth
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    type='password'
-                    id='password'
-                    name='password'
-                    label='Password'
+                    type="password"
+                    id="password"
+                    name="password"
+                    label="Password"
                     fullWidth
                     InputProps={{
                       endAdornment: (
-                        <InputAdornment position='end'>
+                        <InputAdornment position="end">
                           <IconButton>
                             <VisibilityIcon />
                           </IconButton>
@@ -117,33 +117,33 @@ class Singin extends Component {
                   <FormGroup>
                     <FormControlLabel
                       control={<Checkbox />}
-                      label='Remember me'
+                      label="Remember me"
                     ></FormControlLabel>
                   </FormGroup>
                 </Grid>
                 <Grid item xs={12} sx={{ mx: 0, px: 0 }}>
-                  <Button variant='contained' fullWidth>
+                  <Button variant="contained" fullWidth>
                     Sing in
                   </Button>
                 </Grid>
 
                 <Grid item container>
                   <Grid item xs={12} sm={6}>
-                    <Typography textAlign={'left'}>
-                      <Link href='#'>Forgot password?</Link>
+                    <Typography textAlign={"left"}>
+                      <Link href="#">Forgot password?</Link>
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <Typography textAlign={'left'}>
-                      <Link href='#'>Don't have an account? Sign Up</Link>
+                    <Typography textAlign={"left"}>
+                      <Link href="#">Don't have an account? Sign Up</Link>
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} justifyContent={'center'} sx={{ mt: 6 }}>
-                    <Typography variant={'body2'} sx={{ color: '#606060' }}>
+                  <Grid item xs={12} justifyContent={"center"} sx={{ mt: 6 }}>
+                    <Typography variant={"body2"} sx={{ color: "#606060" }}>
                       Copyright ©
-                      <Link href='#' color={'inherit'}>
+                      <Link href="#" color={"inherit"}>
                         Your Website
-                      </Link>{' '}
+                      </Link>{" "}
                       2022.
                     </Typography>
                   </Grid>
