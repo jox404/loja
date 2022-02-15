@@ -9,15 +9,15 @@ import {
   Typography,
   Button,
   Link,
-} from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { React, Component } from 'react';
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { React, Component } from "react";
 
-class Singup extends Component {
+class SignUp extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { firstName: '', lastName: '', email: '', password: '' };
+    this.state = { firstName: "", lastName: "", email: "", password: "" };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -47,26 +47,26 @@ class Singup extends Component {
       <>
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
             mt: 9,
           }}
-          component='form'
+          component="form"
           onSubmit={this.handleSubmit}
         >
           <Avatar
             sx={{
               width: 40,
               height: 40,
-              bgcolor: '#9c27b0',
+              bgcolor: "#9c27b0",
               mb: 1,
             }}
           >
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component={'h1'} variant='h5'>
-            {'Sign up'}
+          <Typography component={"h1"} variant="h5">
+            {"Sign up"}
           </Typography>
           <Grid
             container
@@ -79,9 +79,9 @@ class Singup extends Component {
           >
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <TextField
-                name='firstName'
-                label='First Name'
-                type={'name'}
+                name="firstName"
+                label="First Name"
+                type={"name"}
                 fullWidth
                 value={this.state.firstName}
                 onChange={this.handleChange}
@@ -89,9 +89,9 @@ class Singup extends Component {
             </Grid>
             <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <TextField
-                name='lastName'
-                label='Last Name'
-                type={'name'}
+                name="lastName"
+                label="Last Name"
+                type={"name"}
                 fullWidth
                 value={this.state.lastName}
                 onChange={this.handleChange}
@@ -99,9 +99,9 @@ class Singup extends Component {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                name='email'
-                label='Email Address'
-                type={'email'}
+                name="email"
+                label="Email Address"
+                type={"email"}
                 fullWidth
                 value={this.state.email}
                 onChange={this.handleChange}
@@ -109,9 +109,9 @@ class Singup extends Component {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                name='password'
-                label='Password'
-                type={'password'}
+                name="password"
+                label="Password"
+                type={"password"}
                 fullWidth
                 value={this.state.password}
                 onChange={this.handleChange}
@@ -121,22 +121,22 @@ class Singup extends Component {
               <FormGroup>
                 <FormControlLabel
                   control={<Checkbox />}
-                  label='I want to receive inspiration, marketing promotions and updates via email.'
+                  label="I want to receive inspiration, marketing promotions and updates via email."
                 />
               </FormGroup>
             </Grid>
             <Grid item xs={12} sx={{ mt: 1 }}>
               <Button
-                variant='contained'
-                color='primary'
+                variant="contained"
+                color="primary"
                 fullWidth
-                type='submit'
+                type="submit"
               >
                 SIGN UP
               </Button>
             </Grid>
-            <Grid item container justifyContent={'flex-end'}>
-              <Typography variant='body2'>
+            <Grid item container justifyContent={"flex-end"}>
+              <Typography variant="body2">
                 <Link>Already have an account? Sign in</Link>
               </Typography>
             </Grid>
@@ -146,4 +146,4 @@ class Singup extends Component {
     );
   }
 }
-export default Singup;
+export default SignUp;
