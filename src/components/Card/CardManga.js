@@ -31,15 +31,20 @@ class CardManga extends Component {
                 title="Jujutsu Kaisen"
                 subheader={"Autor: " + "Gege Akutami"}
               />
-              <CardMedia
-                component={"img"}
-                image="http://vortexcultural.com.br/images/2021/05/jujutsu_capa.png"
-                height={300}
-                sx={{}}
-                onMouseMove={upBar}
-                onMouseOut={downBar}
-              ></CardMedia>
-              <Box sx={{ position: "absolute" }}>{this.state.ratingBar}</Box>
+              <Box>
+                <CardMedia
+                  component={"img"}
+                  image="http://vortexcultural.com.br/images/2021/05/jujutsu_capa.png"
+                  height={300}
+                  sx={{}}
+                  onMouseMove={upBar}
+                  onMouseOut={downBar}
+                />
+                <Box sx={{ position: "absolute", mt: -20 }}>
+                  {this.state.ratingBar}
+                </Box>
+              </Box>
+
               <CardContent className="CardContentManga">
                 <Typography varinat="body2" textAlign={"justify"}>
                   Jujutsu Kaisen é um Mangá sombrio que lida com elementos
