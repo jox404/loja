@@ -18,7 +18,7 @@ import {
 import { LockOutlined } from "@mui/icons-material";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-class Singin extends Component {
+class Signin extends Component {
   render() {
     return (
       <>
@@ -157,4 +157,4 @@ class Singin extends Component {
   }
 }
 
-export default Singin;
+export default Signin;
