@@ -11,6 +11,6 @@ function Teste() {
       <RouteJinka />;
     </div>
   );
-}
+
 
 export default Teste; */

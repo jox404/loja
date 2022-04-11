@@ -1,5 +1,6 @@
 import reactDom, { Component } from 'react';
 /* MUI COMPONENTS */
+
 import {
   AppBar,
   Toolbar,
@@ -75,6 +76,7 @@ class NavBar extends Component {
       showDrawerLeft: false,
     };
   }
+
   handleShowDrawer = (side, status) => {
     side === 'right'
       ? this.setState({
