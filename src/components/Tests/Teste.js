@@ -1,12 +1,16 @@
-import { React, Component } from 'react';
-let dados = ['joao', 'paulo', 'ana'];
-const novosDados = dados.splice(1, 1);
+/* import React, { useState } from 'react';
+import RouteJinka from '../../connections/jinkaAnimeAPI/routes';
 
-class Teste extends Component {
-  render() {
-    console.log(dados, novosDados);
-    return <></>;
-  }
+function Teste() {
+  const [isShown, setIsShown] = useState(false);
+
+  return (
+    <div className='App' onMouseLeave={() => setIsShown(false)}>
+      <button onMouseEnter={() => setIsShown(true)}>Hover over me!</button>
+      {isShown && <div>I'll appear when you hover over the button.</div>}
+      <RouteJinka />;
+    </div>
+  );
 }
 
-export default Teste;
+export default Teste; */

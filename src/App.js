@@ -1,21 +1,12 @@
-import logo from "./logo.svg";
-// import "./App.css";
+import PageRoutes from './routes/PageRoutes';
+import { BrowserRouter } from 'react-router-dom';
 
-import Singup from "./components/SingUp/SignUp";
-import Login from "./components/Login/Signin";
-import Form from "./components/FormTest/Form";
-import TodoList from "./components/TodoList/TodoList";
-import Teste from "./components/Tests/Teste";
-import CardManga from "./components/Card/CardManga";
 function App() {
   return (
-    <div className="App">
-      {/* <Login /> 
-      <Singup />
-      <Form /> 
-      <TodoList />
-      <Teste /> */}
-      <CardManga />
+    <div style={{ backgroundColor: '#95989c' }}>
+      <BrowserRouter>
+        <PageRoutes />
+      </BrowserRouter>
     </div>
   );
 }
