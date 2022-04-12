@@ -80,11 +80,11 @@ class NavBar extends Component {
   handleShowDrawer = (side, status) => {
     side === 'right'
       ? this.setState({
-          showDrawerRight: status,
-        })
+        showDrawerRight: status,
+      })
       : this.setState({
-          showDrawerLeft: status,
-        });
+        showDrawerLeft: status,
+      });
   };
 
   render() {
@@ -214,7 +214,7 @@ class NavBar extends Component {
                           {logo.map((txt, index) => {
                             return (
                               <a
-                                href='#'
+                                href='http://localhost:3000'
                                 style={{
                                   color: colors[index],
                                   fontSize: '18pt',

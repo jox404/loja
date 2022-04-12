@@ -1,8 +1,11 @@
 import {
   Button,
   ButtonGroup,
+  Checkbox,
   Container,
   Divider,
+  FormControlLabel,
+  FormGroup,
   Grid,
   Typography,
 } from '@mui/material';
@@ -11,6 +14,12 @@ import { React, Component } from 'react';
 import CardAnime from '../Card/CardAnime';
 import NavBar from '../NavBar/NavBar';
 
+//ICONS
+import CircularProgress from '@mui/material/CircularProgress';
+
+//CSS
+import './style/style.css';
+
 class CustomizedSearch extends Component {
   constructor(props) {
     super(props);
@@ -18,21 +27,29 @@ class CustomizedSearch extends Component {
       paginationAnimes: [],
       linksButton: [],
       currentPage: 0,
+      loadingAnimes: true,
+      animeGenres: [],
+      selectedGenres: [],
+      nextGender: undefined,
+      lastGender: '',
+      loadingGenres: true,
+      showGender: false,
+      showCategory: false,
+      showSeason: false,
     };
   }
-  async filterByCategori(filterBy, filterName, limitPerPage, link) {
+  async filterByCategori(filterBy, filters, limitPerPage, link) {
+    window.scrollTo(0, 0);
     const filterLink =
       link === undefined
-        ? `https://kitsu.io/api/edge/anime?filter%5B${filterBy}%5D=${filterName}&page%5Blimit%5D=${limitPerPage}&page%5Boffset%5D=0`
+        ? `https://kitsu.io/api/edge/anime?filter%5B${filterBy}%5D=${filters}&page%5Blimit%5D=${limitPerPage}&page%5Boffset%5D=0`
+        /*   `https://kitsu.io/api/edge/anime?filter%5B${filterBy}%5D=${filters}&page%5Blimit%5D=${limitPerPage}&page%5Boffset%5D=0` */
         : link;
-    /* this.setState({
-      currentPage: 0,
-    }); */
     const currentPage =
       parseInt(
         filterLink.substring(filterLink.indexOf('&page%5Boffset%5D=') + 18)
       ) /
-        limitPerPage +
+      limitPerPage +
       1;
 
     this.setState({ paginationAnimes: [], currentPage: currentPage });
@@ -43,20 +60,83 @@ class CustomizedSearch extends Component {
       .then((res) => {
         this.setState({
           paginationAnimes: this.state.paginationAnimes.concat(res.data),
-          /* currentPage: currentPage, */
         });
         this.setState({
           linksButton: res.links,
+          loadingAnimes: false,
         });
       });
   }
+
+  async handleAnimesGenres() {
+    const firstLink = 'https://kitsu.io/api/edge/genres?page%5Blimit%5D=10&page%5Boffset%5D=0&sort=name'
+    var data = []
+    for (var i = firstLink; i !== undefined; i = this.state.nextGender) {
+      var link =
+        this.state.nextGender === undefined
+          ? 'https://kitsu.io/api/edge/genres?page%5Blimit%5D=10&page%5Boffset%5D=0&sort=name'
+          : this.state.nextGender;
+      await fetch(link, { method: 'get' })
+        .then((res) => {
+          return res.json();
+        })
+        .then((res) => {
+          const genres = res.data.map((gender) => {
+            const animeGender = gender.attributes.name;
+            data.push(animeGender)
+          });
+          this.setState({
+            lastGender: res.links.last,
+            nextGender: res.links.next,
+          });
+        });
+
+    }
+    this.setState({
+      animeGenres: data,
+      loadingGenres: false
+    });
+
+  }
+  handleSeclectGenres(e) {
+    const value = e.target.value
+    const checked = e.target.checked
+    if (checked === true) {
+      this.setState({
+        selectedGenres: this.state.selectedGenres.concat(value)
+      })
+      console.log(this.state.selectedGenres)
+    } else {
+      this.setState({
+        selectedGenres: this.state.selectedGenres.filter(function (e) { return e !== value })
+      })
+    }
+  }
+
+  handleShowFilter(e) {
+    const valueState = e.target.value
+    if (valueState === 'gender') {
+      this.state.showGender === false ? this.setState({ showGender: true }) :
+        this.setState({ showGender: false })
+    } else if (valueState === 'category') {
+      this.state.showCategory === false ? this.setState({ showCategory: true }) :
+        this.setState({ showCategory: false })
+    } else if (valueState === 'season') {
+      this.state.showSeason === false ? this.setState({ showSeason: true }) :
+        this.setState({ showSeason: false })
+    }
+  }
+
   componentDidMount() {
-    this.filterByCategori('categories', 'anime', 8, undefined);
+    this.filterByCategori('genres', 'comedy', 8, undefined);
+
+    this.handleAnimesGenres()
   }
   render() {
     return (
       <>
         <NavBar />
+
         <Container
           sx={{
             marginTop: 7,
@@ -68,13 +148,91 @@ class CustomizedSearch extends Component {
             CUSTOMIZED SEARCH
           </Typography>
           <Divider />
-          <Box mt={2}>
-            <Grid container>
+          <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+            <ButtonGroup>
+              <Button variant='contained' value='gender' onClick={(e) => this.handleShowFilter(e)}>Gender</Button>
+              <Button variant='contained' value='category' onClick={(e) => this.handleShowFilter(e)}>Category</Button>
+              <Button variant='contained' value='season' onClick={(e) => this.handleShowFilter(e)}>Season</Button>
+            </ButtonGroup>
+          </Box>
+
+          <Box sx={{ minHeight: 470, display: `${this.state.showGender === true ? 'inline' : 'none'}` }}>
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-around'
+            }}>
+              <CircularProgress
+                sx={{
+                  display: `${this.state.loadingGenres === true ? 'flex' : 'none'
+                    }`,
+                  marginTop: 22
+
+                }}
+              />
+            </Box>
+            <FormGroup>
+              <Grid container>
+                {this.state.animeGenres.map((category, index) => {
+                  return (
+                    <Grid
+                      item
+                      xs={6}
+                      sm={6}
+                      md={2}
+                      lg={2}
+                      xl={2}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        paddingLeft: { xs: 2, sm: 6, lg: 0, xl: 0 },
+                      }}
+                    >
+                      <FormControlLabel
+                        key={index}
+                        control={<Checkbox value={category} onClick={(e) => this.handleSeclectGenres(e)} />}
+                        label={category}
+                      />
+                    </Grid>
+                  );
+                })}
+
+              </Grid>
+              <Box sx={{ display: `${this.state.loadingGenres === true ? 'none' : 'flex'}`, justifyContent: 'space-around' }}>
+                <Button variant={'contained'} onClick={() => this.filterByCategori('genres', this.state.selectedGenres, 8, undefined)}>Search</Button>
+              </Box>
+            </FormGroup>
+          </Box>
+          <Box mt={2} sx={{ minHeight: 0 }}>
+            <Grid container justifyContent={'space-around'}>
+              <CircularProgress
+                sx={{
+                  display: `${this.state.loadingAnimes === true ? 'flex' : 'none'
+                    }`,
+                  marginTop: 40,
+                }}
+              />
               {this.state.paginationAnimes.map((anime, index) => {
+                const data = {
+                  name:
+                    anime.attributes.titles.en_jp === undefined || null
+                      ? anime.attributes.titles.en_us === undefined || null
+                        ? anime.attributes.titles.en === undefined || null
+                          ? anime.attributes.titles.ja_jp
+                          : anime.attributes.titles.en
+                        : anime.attributes.titles.en_us
+                      : anime.attributes.titles.en_jp,
+                  bgImage: anime.attributes.posterImage.large,
+                  synopsis:
+                    anime.attributes.synopsis === ''
+                      ? "Sorry, We don't have a synopsis for this anime"
+                      : anime.attributes.synopsis,
+                };
+
                 return (
                   <Grid
                     item
-                    key={index + 'item'}
+                    key={index + 'card'}
                     xs={12}
                     sm={6}
                     md={4}
@@ -82,87 +240,94 @@ class CustomizedSearch extends Component {
                     xl={3}
                   >
                     <CardAnime
-                      key={index}
-                      name={anime.attributes.titles.en_us}
-                      bgImage={anime.attributes.posterImage.large}
-                      synopsis={anime.attributes.synopsis}
+                      name={data.name}
+                      bgImage={data.bgImage}
+                      synopsis={data.synopsis}
                     />
                   </Grid>
                 );
               })}
             </Grid>
           </Box>
-          <ButtonGroup>
-            <Button
-              variant='contained'
-              disabled={this.state.currentPage === 1 ? true : false}
-              onClick={() =>
-                this.filterByCategori(
-                  'categories',
-                  'adventure',
-                  2,
-                  this.state.linksButton.first
-                )
-              }
-            >
-              First
-            </Button>
-            <Button
-              variant='contained'
-              disabled={
-                this.state.linksButton.prev === undefined ? true : false
-              }
-              onClick={() =>
-                this.filterByCategori(
-                  'categories',
-                  'adventure',
-                  2,
-                  this.state.linksButton.prev
-                )
-              }
-            >
-              Prev
-            </Button>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-around',
+              flexDirection: 'row',
+            }}
+          >
+            <ButtonGroup>
+              <Button
+                variant='contained'
+                disabled={this.state.currentPage === 1 ? true : false}
+                onClick={() =>
+                  this.filterByCategori(
+                    'categories',
+                    'adventure',
+                    8,
+                    this.state.linksButton.first
+                  )
+                }
+              >
+                First
+              </Button>
+              <Button
+                variant='contained'
+                disabled={
+                  this.state.linksButton.prev === undefined ? true : false
+                }
+                onClick={() =>
+                  this.filterByCategori(
+                    'categories',
+                    'adventure',
+                    8,
+                    this.state.linksButton.prev
+                  )
+                }
+              >
+                Prev
+              </Button>
 
-            <Button variant='contained' color='warning'>
-              {this.state.currentPage}
-            </Button>
+              <Button variant='contained' color='warning'>
+                {this.state.currentPage}
+              </Button>
 
-            <Button
-              variant='contained'
-              disabled={
-                this.state.linksButton.next === undefined ? true : false
-              }
-              onClick={() =>
-                this.filterByCategori(
-                  'categories',
-                  'adventure',
-                  2,
-                  this.state.linksButton.next
-                )
-              }
-            >
-              Next
-            </Button>
+              <Button
+                variant='contained'
+                disabled={
+                  this.state.linksButton.next === undefined ? true : false
+                }
+                onClick={() =>
+                  this.filterByCategori(
+                    'categories',
+                    'adventure',
+                    8,
+                    this.state.linksButton.next
+                  )
+                }
+              >
+                Next
+              </Button>
 
-            <Button
-              variant='contained'
-              onClick={() =>
-                this.filterByCategori(
-                  'categories',
-                  'adventure',
-                  2,
-                  this.state.linksButton.last
-                )
-              }
-              disabled={
-                this.state.linksButton.last === undefined ? true : false
-              }
-            >
-              Last
-            </Button>
-          </ButtonGroup>
-        </Container>
+              <Button
+                variant='contained'
+                onClick={() =>
+                  this.filterByCategori(
+                    'categories',
+                    'adventure',
+                    8,
+                    this.state.linksButton.last
+                  )
+                }
+                disabled={
+                  this.state.linksButton.last === undefined ? true : false
+                }
+              >
+                Last
+              </Button>
+            </ButtonGroup>
+          </Box>
+        </Container >
       </>
     );
   }

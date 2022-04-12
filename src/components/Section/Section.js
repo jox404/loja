@@ -33,6 +33,7 @@ class Section extends Component {
     };
   }
   async pagination(currentPage, limitItems) {
+    window.scrollTo(0, 0); //this function makes the page go back to the top
     this.setState({
       paginationAnimes: [],
       loadingAnimes: true,
@@ -51,9 +52,7 @@ class Section extends Component {
       .then((res) => {
         res.map((item) => {
           this.setState({
-            paginationAnimes: this.state.paginationAnimes.concat(
-              item.attributes
-            ),
+            paginationAnimes: this.state.paginationAnimes.concat(item),
           });
         });
       })
@@ -83,6 +82,7 @@ class Section extends Component {
   }
   render() {
     const paginationItems = this.state.paginationAnimes;
+
     return (
       <>
         <Container maxWidth='lg' sx={{ marginTop: 7, bgcolor: '#95989c' }}>
@@ -94,7 +94,7 @@ class Section extends Component {
             RELEASES OF THE WEEK
           </Typography>
           <Divider sx={{ marginBottom: 2 }} />
-          <Box>
+          <Box sx={{ minHeight: 900 }}>
             <Grid
               container
               direction={'row'}
@@ -107,16 +107,33 @@ class Section extends Component {
                   display: `${
                     this.state.loadingAnimes === true ? 'inline' : 'none'
                   }`,
+                  marginTop: 25,
                 }}
               />
-              {paginationItems.map((card, index) => {
+              {paginationItems.map((anime, index) => {
+                const data = {
+                  name:
+                    anime.attributes.titles.en_jp === undefined || null
+                      ? anime.attributes.titles.en_us === undefined || null
+                        ? anime.attributes.titles.en === undefined || null
+                          ? anime.attributes.titles.ja_jp
+                          : anime.attributes.titles.en
+                        : anime.attributes.titles.en_us
+                      : anime.attributes.titles.en_jp,
+                  bgImage: anime.attributes.posterImage.large,
+                  synopsis:
+                    anime.attributes.synopsis === ''
+                      ? "Sorry, We don't have a synopsis for this anime"
+                      : anime.attributes.synopsis,
+                };
+
                 return (
                   <Grid item key={index} xs={12} sm={6} md={4} lg={3} xl={3}>
                     <CardAnime
-                      name={card.titles.en_jp}
-                      alternativeName={card.titles.en}
-                      bgImage={card.posterImage.large}
-                      synopsis={card.synopsis}
+                      key={index}
+                      name={data.name}
+                      bgImage={data.bgImage}
+                      synopsis={data.synopsis}
                     />
                   </Grid>
                 );

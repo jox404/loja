@@ -75,7 +75,7 @@ class CardAnime extends Component {
                 <Typography
                   varinat='body2'
                   textAlign={'justify'}
-                  sx={{ maxHeight: 100, overflow: 'auto' }}
+                  sx={{ maxHeight: 100, minHeight: 100, overflow: 'auto' }}
                 >
                   {synopsis}
                 </Typography>
