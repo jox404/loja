@@ -25,16 +25,17 @@ import DrawerLeft from './DrawerLeft';
 
 /* ICONS */
 import MenuOpenDrawerIcon from '@mui/icons-material/Menu';
-import { Menu, Search } from '@mui/icons-material';
+import { Login, Menu, Search } from '@mui/icons-material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 /* FIRE BASE */
+import { db } from '../../connections/firebase';
 import {
-  browserSessionPersistence,
   getAuth,
-  setPersistence,
-  signInWithEmailAndPassword,
+  onAuthStateChanged,
 } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore'
+
 
 const theme = createTheme({
   palette: {
@@ -65,13 +66,12 @@ class NavBar extends Component {
     this.state = {
       validateUser: false,
       user: {},
-      signIn: true,
+      signIn: false,
       subscribe: true,
-      userName: 'joao mocado',
-      userEmail: '',
+      displayName: '',
+      email: '',
       userProfilePhoto:
         'https://images.pexels.com/photos/2709388/pexels-photo-2709388.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
-
       showDrawerRight: false,
       showDrawerLeft: false,
     };
@@ -87,7 +87,36 @@ class NavBar extends Component {
       });
   };
 
+  handleAuth() {
+    const auth = getAuth()
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log(user)
+        const uid = user.uid
+        const docRef = doc(db, "users", uid)
+        const docSnap = getDoc(docRef).then((res) => {
+          const data = res._document.data.value.mapValue.fields
+          console.log(data.email.stringValue)
+          this.setState({
+            email: data.email.stringValue,
+            displayName: data.firstName.stringValue,
+            firstName: data.firstName.stringValue,
+            lastName: data.lastName.stringValue,
+            signIn: true,
+          })
+        })
+        console.log("User is sign In")
+      } else {
+        console.log("User is signed out")
+      }
+    })
+
+  }
+  componentDidMount() {
+    this.handleAuth()
+  }
   render() {
+
     const logo = ['A', 'N', 'I', 'M', 'E'];
     const colors = ['#e83a14', '#ff6c09', '#fd922d', '#ff6c09', '#e83a14'];
     return (
@@ -156,7 +185,7 @@ class NavBar extends Component {
                           </a>
                           <a
                             className='navItem'
-                            href='http://localhost:3000/customizedSearch'
+                            href='/customizedSearch'
                             id='customizedSearch'
                           >
                             Customized Search
@@ -311,8 +340,6 @@ class NavBar extends Component {
                                   lg: 'none',
                                   xl: 'none',
                                 },
-                                //mt: '19.5px',
-                                //p: 0,
                               }}
                               color='milk'
                               size='large'
@@ -343,8 +370,8 @@ class NavBar extends Component {
             content={
               <DrawerRight
                 signIn={this.state.signIn}
-                userName={this.state.userName}
-                userEmail={this.state.userEmail}
+                displayName={this.state.displayName}
+                email={this.state.email}
                 userPhoto={this.state.userProfilePhoto}
               />
             }
@@ -355,4 +382,4 @@ class NavBar extends Component {
   }
 }
 
-export default NavBar;
+export default NavBar

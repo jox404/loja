@@ -20,8 +20,10 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 
 /* FIRE BASE */
 import {
+  browserLocalPersistence,
   browserSessionPersistence,
   getAuth,
+  onAuthStateChanged,
   setPersistence,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
@@ -38,12 +40,12 @@ class Signin extends Component {
 
   handleSignIn(email, password) {
     const auth = getAuth();
-    setPersistence(auth, browserSessionPersistence).then(() => {
+    setPersistence(auth, browserLocalPersistence).then(() => {
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
           console.log(user, ', você foi logado com sucesso');
-          window.location.assign('http://localhost:3000/');
+          window.location.assign('http://localhost:3000/'); // vai redirecionar o usuario para a home page depois do login
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -58,8 +60,19 @@ class Signin extends Component {
     const name = target.name;
     this.setState({ [name]: value });
   }
+  validateLogin() {
+    const auth = getAuth()
+    onAuthStateChanged(auth, (user) => {
+      if (user !== null) {
+        window.location.assign('http://localhost:3000/');
+      }
+    })
+  }
+  componentDidMount() {
+    this.validateLogin()
+  }
   render() {
-    console.log(getAuth());
+    /* console.log(getAuth()); */
     return (
       <>
         <Grid
@@ -72,13 +85,13 @@ class Signin extends Component {
         >
           <Grid
             item
-            md={7}
-            lg={7}
-            xl={7}
+            lg={8}
+            xl={8}
             sx={{
               display: {
                 xs: 'none',
-                md: 'flex',
+                sm: 'none',
+                md: 'none',
                 lg: 'flex',
                 xl: 'flex',
               },
@@ -92,12 +105,12 @@ class Signin extends Component {
             item
             xs={12}
             sm={12}
-            md={5}
-            lg={5}
-            xl={5}
+            md={12}
+            lg={4}
+            xl={4}
             sx={{ backgroundColor: '#fff', mx: 0 }}
           >
-            <Box componet='form' sx={{ mt: 10, mx: 2 }} id='formValidation'>
+            <Box componet='form' sx={{ display: 'block', marginX: 'auto', paddingX: 1, marginTop: { xs: 15, sm: 20, md: 30, lg: 10, xl: 20 } }} id='formValidation' maxWidth={600}>
               <Box
                 sx={{
                   display: 'flex',
@@ -125,83 +138,84 @@ class Signin extends Component {
                   Sign in
                 </Typography>
               </Box>
-              <Grid container item spacing={2} xs={12}>
-                <Grid item xs={12}>
-                  <TextField
-                    value={this.state.email}
-                    onChange={this.handleChange}
-                    type='email'
-                    id='email'
-                    name='email'
-                    label='Email Address'
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    value={this.state.password}
-                    onChange={this.handleChange}
-                    type='password'
-                    id='password'
-                    name='password'
-                    label='Password'
-                    fullWidth
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position='end'>
-                          <IconButton>
-                            <VisibilityIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Grid>
+              <Box>
+                <Grid container item xs={12}>
+                  <Grid item xs={12}>
+                    <TextField
+                      value={this.state.email}
+                      onChange={this.handleChange}
+                      type='email'
+                      id='email'
+                      name='email'
+                      label='Email Address'
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={12} mt={1}>
+                    <TextField
+                      value={this.state.password}
+                      onChange={this.handleChange}
+                      type='password'
+                      id='password'
+                      name='password'
+                      label='Password'
+                      fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position='end'>
+                            <IconButton>
+                              <VisibilityIcon />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
 
-                <Grid item xs={12}>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label='Remember me'
-                    ></FormControlLabel>
-                  </FormGroup>
-                </Grid>
-                <Grid item xs={12} sx={{ mx: 0, px: 0 }}>
-                  <Button
-                    variant='contained'
-                    fullWidth
-                    onClick={() =>
-                      this.handleSignIn(this.state.email, this.state.password)
-                    }
-                  >
-                    Sign in
-                  </Button>
-                </Grid>
-
-                <Grid item container>
-                  <Grid item xs={12} sm={6}>
-                    <Typography textAlign={'left'}>
-                      <Link href='#'>Forgot password?</Link>
-                    </Typography>
+                  <Grid item xs={12} mt={1}>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label='Remember me'
+                      ></FormControlLabel>
+                    </FormGroup>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Typography textAlign={'left'}>
-                      <Link href='http://localhost:3000/signup'>
-                        Don't have an account? Sign Up
-                      </Link>
-                    </Typography>
+                  <Grid item xs={12} sx={{ mx: 0, px: 0 }} mt={1}>
+                    <Button
+                      variant='contained'
+                      fullWidth
+                      onClick={() =>
+                        this.handleSignIn(this.state.email, this.state.password)
+                      }
+                    >
+                      Sign in
+                    </Button>
                   </Grid>
-                  <Grid item xs={12} justifyContent={'center'} sx={{ mt: 6 }}>
-                    <Typography variant={'body2'} sx={{ color: '#606060' }}>
-                      Copyright ©
-                      <Link href='#' color={'inherit'}>
-                        Your Website
-                      </Link>{' '}
-                      2022.
-                    </Typography>
+                  <Grid item container mt={2}>
+                    <Grid item xs={12} sm={4}>
+                      <Typography textAlign={'left'}>
+                        <Link href='#'>Forgot password?</Link>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={8}>
+                      <Typography textAlign={'right'}>
+                        <Link href='http://localhost:3000/signup'>
+                          Don't have an account? Sign Up
+                        </Link>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} sx={{ mt: 20 }}>
+                      <Typography variant={'body2'} sx={{ color: '#606060' }} textAlign={'center'}>
+                        Copyright ©
+                        <Link href='#' color={'inherit'}>
+                          Your Website
+                        </Link>{' '}
+                        2022.
+                      </Typography>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              </Box>
             </Box>
           </Grid>
         </Grid>

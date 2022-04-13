@@ -4,6 +4,7 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonGroup,
   Divider,
   List,
   ListItem,
@@ -11,14 +12,17 @@ import {
 } from '@mui/material';
 import '../Drawer/style/drawerMenu.css';
 import './Style/style.css';
-
+//ICONS MUI
 import ProfileIcon from '@mui/icons-material/Person';
 import MylistIcon from '@mui/icons-material/FormatListBulleted';
 import FavoritesIcon from '@mui/icons-material/Star';
 import SeeLaterIcon from '@mui/icons-material/RemoveRedEye';
 import DroppedIcon from '@mui/icons-material/Delete';
 import HistoryIcon from '@mui/icons-material/AccessTimeFilledOutlined';
-import { Logout } from '@mui/icons-material';
+import Logout from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+//FIREBASE
 import { getAuth, signOut } from 'firebase/auth';
 
 class DrawerRight extends Component {
@@ -52,8 +56,8 @@ class DrawerRight extends Component {
               src={this.props.userProfilePhoto}
               sx={{ width: 70, height: 70 }}
             ></Avatar>
-            <Typography variant='h5'>{this.props.userName}</Typography>
-            <Typography variant='body2'>{this.props.userEmail}</Typography>
+            <Typography variant='h5'>{this.props.displayName}</Typography>
+            <Typography variant='body2'>{this.props.email}</Typography>
           </Box>
           <List className='list' sx={{ padding: 0 }}>
             <ListItem className='itemList'>
@@ -90,15 +94,37 @@ class DrawerRight extends Component {
                 display: 'flex',
               }}
             >
-              <Button
-                onClick={this.handleSignOut}
-                variant='contained'
-                color='secondary'
-                endIcon={<Logout />}
-                sx={{ mt: 2 }}
-              >
-                SIGN OUT
-              </Button>
+              {this.props.signIn === true ?
+                <Button
+                  onClick={this.handleSignOut}
+                  variant='contained'
+                  color='secondary'
+                  endIcon={<Logout />}
+                  sx={{ mt: 2 }}
+                >
+                  SIGN OUT
+                </Button>
+                :
+                <>
+                  <ButtonGroup sx={{ mt: 2 }}>
+                    <Button
+                      href='/signin'
+                      variant='contained'
+                      color='primary'
+                      endIcon={<LoginIcon />}
+                    >
+                      SIGN IN
+                    </Button>
+                    <Button
+                      href='/signup'
+                      variant='contained'
+                      color='secondary'
+                      endIcon={<PersonAddAltIcon />}
+                    >
+                      SIGN UP
+                    </Button>
+                  </ButtonGroup>
+                </>}
             </Box>
           </List>
         </Box>

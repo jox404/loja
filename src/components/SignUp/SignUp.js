@@ -12,12 +12,12 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { React, Component } from 'react';
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, setDoc } from 'firebase/firestore';
 
 /* FIRE BASE  */
 import { db } from '../../connections/firebase';
 import { cretateUser } from '../../connections/firebase';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 
 class SignUp extends Component {
   constructor(props) {
@@ -42,14 +42,13 @@ class SignUp extends Component {
   validateInput(name, value) {
     const inputName = name;
     const inputValue = value;
-    console.log(inputName, inputValue);
     inputValue === ''
       ? this.setState({
-          [inputName]: true,
-        })
+        [inputName]: true,
+      })
       : this.setState({
-          [inputName]: false,
-        });
+        [inputName]: false,
+      });
   }
   handleChange(event) {
     const target = event.target;
@@ -62,7 +61,7 @@ class SignUp extends Component {
   }
 
   usersCollectionRef = collection(db, 'users');
-  async validateUser() {
+  /* async validateUser() {
     const data = await getDocs(this.usersCollectionRef);
     const usersData = data.docs.map((doc) => ({
       ...doc.data(),
@@ -72,16 +71,16 @@ class SignUp extends Component {
       this.state.emailError === true
         ? console.log('falseeee')
         : userData.email === this.state.email
-        ? this.setState({
+          ? this.setState({
             emailError: true,
           })
-        : console.log(userData.email, 'true');
+          : console.log(userData.email, 'true');
     });
-  }
-  handleError() {}
+  } */
+  handleError() { }
   /* async createUser() {
     this.validateUser().then((res) => {
-      console.log('teste', res);
+     
       res === true
         ? addDoc(this.usersCollectionRef, {
             firstName: this.state.firstName,
@@ -98,7 +97,12 @@ class SignUp extends Component {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredendial) => {
         const user = userCredendial.user;
-        console.log(user);
+        const uid = userCredendial.user.uid;
+        setDoc(doc(db, "users", uid), {
+          firstName: this.state.firstName,
+          lastName: this.state.lastName,
+          email: this.state.email,
+        })
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -107,13 +111,24 @@ class SignUp extends Component {
   }
 
   async clearErro() {
-    console.log('chamou....');
+
     if (this.state.validForm === false) {
       this.setState({
         helperText: '',
         emailError: false,
       });
     }
+  }
+  validateLogin() {
+    const auth = getAuth()
+    onAuthStateChanged(auth, (user) => {
+      if (user !== null) {
+        window.location.assign('http://localhost:3000/');
+      }
+    })
+  }
+  componentDidMount() {
+    this.validateLogin()
   }
   render() {
     return (

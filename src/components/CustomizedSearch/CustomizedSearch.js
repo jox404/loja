@@ -66,6 +66,11 @@ class CustomizedSearch extends Component {
           loadingAnimes: false,
         });
       });
+    this.setState({
+      showGender: false,
+      showCategory: false,
+      showSeason: false,
+    })
   }
 
   async handleAnimesGenres() {
