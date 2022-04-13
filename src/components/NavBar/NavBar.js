@@ -243,7 +243,7 @@ class NavBar extends Component {
                           {logo.map((txt, index) => {
                             return (
                               <a
-                                href='http://localhost:3000'
+                                href='./'
                                 style={{
                                   color: colors[index],
                                   fontSize: '18pt',
@@ -309,7 +309,7 @@ class NavBar extends Component {
                                   xl: 'inline-flex',
                                 },
                               }}
-                              href='http://localhost:3000/signin'
+                              href='/signin'
                             >
                               Sing in
                             </Button>
@@ -326,7 +326,7 @@ class NavBar extends Component {
                               }}
                               variant='outlined'
                               color='secondary'
-                              href='http://localhost:3000/signup'
+                              href='/signup'
                             >
                               Sign up
                             </Button>
@@ -343,7 +343,7 @@ class NavBar extends Component {
                               }}
                               color='milk'
                               size='large'
-                              href='http://localhost:3000/signin'
+                              href='/signin'
                             >
                               <AccountCircleIcon fontSize='large' />
                             </IconButton>
