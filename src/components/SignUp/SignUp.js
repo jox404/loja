@@ -123,7 +123,7 @@ class SignUp extends Component {
     const auth = getAuth()
     onAuthStateChanged(auth, (user) => {
       if (user !== null) {
-        window.location.assign('http://localhost:3000/');
+        /* window.location.assign('http://localhost:3000/'); */
       }
     })
   }

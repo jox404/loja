@@ -45,7 +45,7 @@ class Signin extends Component {
         .then((userCredential) => {
           const user = userCredential.user;
           console.log(user, ', você foi logado com sucesso');
-          window.location.assign('http://localhost:3000/'); // vai redirecionar o usuario para a home page depois do login
+          /* window.location.assign('http://localhost:3000/'); */ // vai redirecionar o usuario para a home page depois do login
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -64,7 +64,7 @@ class Signin extends Component {
     const auth = getAuth()
     onAuthStateChanged(auth, (user) => {
       if (user !== null) {
-        window.location.assign('http://localhost:3000/');
+        /* window.location.assign('http://localhost:3000/'); */
       }
     })
   }
