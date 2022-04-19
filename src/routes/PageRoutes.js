@@ -7,6 +7,7 @@ import Signin from '../components/SignIn/Signin';
 import Teste from '../components/Tests/Teste';
 import CustomizedSearch from '../components/CustomizedSearch/CustomizedSearch';
 import UserDataRegistration from '../components/UserDataRegistration/UserDataRegistration';
+import Profile from '../components/Profile/Profile';
 
 class PageRoutes extends Component {
   render() {
@@ -18,6 +19,7 @@ class PageRoutes extends Component {
         <Route path='/registration' element={<UserDataRegistration />} />
         <Route path='/teste' element={<Teste />} />
         <Route path='/customizedSearch' element={<CustomizedSearch />} />
+        <Route path='/Profile' element={<Profile />} />
       </Routes>
     );
   }

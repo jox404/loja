@@ -1,0 +1,14 @@
+.imgProfile {
+  opacity: 1;
+  position: absolute;
+  z-index: 1;
+  transition: 0.5s;
+}
+.searchIcon {
+  position: fixed;
+  z-index: 0;
+}
+.imgProfile:hover {
+  opacity: 0.5;
+  transition: 0.5s;
+}

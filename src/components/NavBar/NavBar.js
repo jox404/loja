@@ -74,6 +74,8 @@ class NavBar extends Component {
         'https://images.pexels.com/photos/2709388/pexels-photo-2709388.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
       showDrawerRight: false,
       showDrawerLeft: false,
+      backgroundImage: '',
+      profileImage: ''
     };
   }
 
@@ -87,24 +89,27 @@ class NavBar extends Component {
       });
   };
 
-  handleAuth() {
+  async handleAuth() {
     const auth = getAuth()
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log(user)
+
         const uid = user.uid
         const docRef = doc(db, "users", uid)
         const docSnap = getDoc(docRef).then((res) => {
           const data = res._document.data.value.mapValue.fields
-          console.log(data.email.stringValue)
+
           this.setState({
             email: data.email.stringValue,
             displayName: data.firstName.stringValue,
             firstName: data.firstName.stringValue,
             lastName: data.lastName.stringValue,
             signIn: true,
+            backgroundImage: data.backgroundImage.stringValue,
+            profileImage: data.profileImage.stringValue,
           })
         })
+
         console.log("User is sign In")
       } else {
         console.log("User is signed out")
@@ -286,7 +291,7 @@ class NavBar extends Component {
                             >
                               <Avatar
                                 className='avatar'
-                                src={`${this.stateuserPhoto}`}
+                                src={this.state.profileImage}
                                 sx={{
                                   width: 50,
                                   height: 50,
@@ -372,7 +377,8 @@ class NavBar extends Component {
                 signIn={this.state.signIn}
                 displayName={this.state.displayName}
                 email={this.state.email}
-                userPhoto={this.state.userProfilePhoto}
+                profileImage={this.state.profileImage}
+                backgroundImage={this.state.backgroundImage}
               />
             }
           />

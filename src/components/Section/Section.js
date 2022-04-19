@@ -8,6 +8,7 @@ import {
   Container,
   Divider,
   Grid,
+  Input,
   Typography,
 } from '@mui/material';
 
@@ -22,6 +23,9 @@ import {
   setPersistence,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
+import { getStorage, ref, uploadBytes } from 'firebase/storage'
+
+
 
 class Section extends Component {
   constructor(props) {
@@ -30,6 +34,7 @@ class Section extends Component {
       paginationAnimes: [],
       currentPage: 1,
       loadingAnimes: true,
+      fileTeste: ''
     };
   }
   async pagination(currentPage, limitItems) {
@@ -80,6 +85,17 @@ class Section extends Component {
   componentDidMount() {
     this.pagination(this.state.currentPage, 8);
   }
+  async sendFiles() {
+    const file = this.state.fileTeste
+    console.log(file)
+    const storage = getStorage();
+    const imagesRef = ref(storage, `images/` + file)
+    console.log(imagesRef)
+    uploadBytes(imagesRef).then((snapshot) => {
+      console.log(snapshot)
+    })
+  }
+
   render() {
     const paginationItems = this.state.paginationAnimes;
 
@@ -93,6 +109,11 @@ class Section extends Component {
           >
             RELEASES OF THE WEEK
           </Typography>
+          {/* <Input type='file' onChange={(e) => {
+            const value = e.target.value
+            this.setState({ fileTeste: value })
+          }} />
+          <Button onClick={() => this.sendFiles()}>SUBIR ARQUIVO</Button> */}
           <Divider sx={{ marginBottom: 2 }} />
           <Box sx={{ minHeight: 900 }}>
             <Grid
@@ -104,9 +125,8 @@ class Section extends Component {
             >
               <CircularProgress
                 sx={{
-                  display: `${
-                    this.state.loadingAnimes === true ? 'inline' : 'none'
-                  }`,
+                  display: `${this.state.loadingAnimes === true ? 'inline' : 'none'
+                    }`,
                   marginTop: 25,
                 }}
               />

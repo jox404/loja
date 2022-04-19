@@ -43,26 +43,34 @@ class DrawerRight extends Component {
       });
   }
   render() {
+    console.log(this.props.backgroundImage)
     return (
       <>
         <Box className='drawerBgColor'>
           <Box
             className='drawerProfile'
             bgcolor={'darksalmon'}
-            sx={{ width: { xs: 250, sm: 300, md: 300, lg: 300, xl: 455 } }}
+
+            sx={{
+              width: { xs: 250, sm: 300, md: 300, lg: 300, xl: 455 },
+              backgroundImage: `url(${this.props.backgroundImage})`,
+              backgroundSize: '310px 160px',
+            }}
           >
             <Avatar
               className='avatar'
-              src={this.props.userProfilePhoto}
+              src={this.props.profileImage}
               sx={{ width: 70, height: 70 }}
-            ></Avatar>
+            />
             <Typography variant='h5'>{this.props.displayName}</Typography>
             <Typography variant='body2'>{this.props.email}</Typography>
           </Box>
           <List className='list' sx={{ padding: 0 }}>
-            <ListItem className='itemList'>
-              <ProfileIcon sx={{ mr: 1 }} /> Profile
-            </ListItem>
+            <a href='/profile'>
+              <ListItem className='itemList'>
+                <ProfileIcon sx={{ mr: 1 }} /> Profile
+              </ListItem>
+            </a>
             <Divider />
             <ListItem className='itemList'>
               <MylistIcon sx={{ mr: 1 }} />

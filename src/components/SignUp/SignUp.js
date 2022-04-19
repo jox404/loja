@@ -102,6 +102,8 @@ class SignUp extends Component {
           firstName: this.state.firstName,
           lastName: this.state.lastName,
           email: this.state.email,
+          backgroundImage: '',
+          profileImage: '',
         })
       })
       .catch((error) => {
