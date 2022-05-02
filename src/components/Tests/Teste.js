@@ -3,7 +3,9 @@ import RouteJinka from '../../connections/jinkaAnimeAPI/routes';
 
 function Teste() {
   const [isShown, setIsShown] = useState(false);
+  function handletext(){
 
+  }
   return (
     <div className='App' onMouseLeave={() => setIsShown(false)}>
       <button onMouseEnter={() => setIsShown(true)}>Hover over me!</button>

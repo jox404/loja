@@ -35,6 +35,7 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore'
+import DefaultTheme from '../Themes/DefaultTheme';
 
 
 const theme = createTheme({
@@ -126,10 +127,10 @@ class NavBar extends Component {
     const colors = ['#e83a14', '#ff6c09', '#fd922d', '#ff6c09', '#e83a14'];
     return (
       <>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={DefaultTheme}>
           <Box sx={{}}>
-            <AppBar color='darkWhite' elevation={1}>
-              <Container maxWidth='lg' sx={{ padding: 0 }}>
+            <AppBar color='darkWhite' elevation={1} position='relative'>
+              <Container maxWidth='xl' sx={{ padding: 0 }}>
                 <Toolbar sx={{ padding: 0, margin: 0 }}>
                   <Grid container>
                     <Grid
@@ -329,7 +330,7 @@ class NavBar extends Component {
                                   xl: 'inline-flex',
                                 },
                               }}
-                              variant='outlined'
+                              variant='contained'
                               color='secondary'
                               href='/signup'
                             >

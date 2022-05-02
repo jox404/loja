@@ -34,7 +34,6 @@ class Section extends Component {
       paginationAnimes: [],
       currentPage: 1,
       loadingAnimes: true,
-      fileTeste: ''
     };
   }
   async pagination(currentPage, limitItems) {
@@ -85,16 +84,6 @@ class Section extends Component {
   componentDidMount() {
     this.pagination(this.state.currentPage, 8);
   }
-  async sendFiles() {
-    const file = this.state.fileTeste
-    console.log(file)
-    const storage = getStorage();
-    const imagesRef = ref(storage, `images/` + file)
-    console.log(imagesRef)
-    uploadBytes(imagesRef).then((snapshot) => {
-      console.log(snapshot)
-    })
-  }
 
   render() {
     const paginationItems = this.state.paginationAnimes;
@@ -109,11 +98,6 @@ class Section extends Component {
           >
             RELEASES OF THE WEEK
           </Typography>
-          {/* <Input type='file' onChange={(e) => {
-            const value = e.target.value
-            this.setState({ fileTeste: value })
-          }} />
-          <Button onClick={() => this.sendFiles()}>SUBIR ARQUIVO</Button> */}
           <Divider sx={{ marginBottom: 2 }} />
           <Box sx={{ minHeight: 900 }}>
             <Grid
@@ -145,6 +129,7 @@ class Section extends Component {
                     anime.attributes.synopsis === ''
                       ? "Sorry, We don't have a synopsis for this anime"
                       : anime.attributes.synopsis,
+                  id: anime.id
                 };
 
                 return (
@@ -154,6 +139,7 @@ class Section extends Component {
                       name={data.name}
                       bgImage={data.bgImage}
                       synopsis={data.synopsis}
+                      id={data.id}
                     />
                   </Grid>
                 );

@@ -30,8 +30,12 @@ class CardAnime extends Component {
     });
   };
 
+  redirectPage(id) {
+    window.location.href = `http://localhost:3000/Anime/${id}`
+  }
+
   render() {
-    const { name, alternativeName, bgImage, synopsis } = this.props;
+    const { name, alternativeName, bgImage, synopsis, id } = this.props;
     return (
       <>
         <Box
@@ -55,7 +59,8 @@ class CardAnime extends Component {
             <Card elevation={15}>
               <CardHeader
                 title={name}
-                sx={{ overflow: 'auto', pb: 0, height: 70, fontSize: 30 }}
+                sx={{ overflow: 'auto', pb: 0, height: 70, fontSize: 30, cursor: 'pointer' }}
+                onClick={() => this.redirectPage(id)}
               />
 
               <Box onMouseEnter={this.upBar} onMouseLeave={this.downBar}>
@@ -68,7 +73,7 @@ class CardAnime extends Component {
                   ''
                 )}
 
-                <CardMedia component={'img'} image={bgImage} height={300} />
+                <CardMedia component={'img'} image={bgImage} height={300} onClick={() => this.redirectPage(id)} sx={{ cursor: 'pointer' }} />
               </Box>
 
               <CardContent className='CardContentAnime'>
