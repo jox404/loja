@@ -12,6 +12,7 @@ import {
     Container,
     Divider,
     Grid,
+    IconButton,
     List,
     ListItem,
     Typography,
@@ -30,12 +31,17 @@ import { db } from '../../connections/firebase';
 import { getAuth } from 'firebase/auth';
 import { render } from '@testing-library/react';
 
+//CSS
+import './style/style.css';
+import { fontSize } from '@mui/system';
+import Score from './Score';
+
 class AnimePageComponent extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            userUid: "g0dNiiSCrRf0xbPbxE9Klbcuq2i2",
+            userUid: 'g0dNiiSCrRf0xbPbxE9Klbcuq2i2',
             season: '',
             studio: '',
             episodes: '',
@@ -45,12 +51,14 @@ class AnimePageComponent extends Component {
             synopsis: '',
             imgAnime: '',
             title: '',
+            slug: '',
+            alternativeTitle: '',
             seeLater: false,
             watching: false,
             favorit: false,
             watched: false,
             dropped: false,
-            global: {}
+            global: {},
         };
     }
 
@@ -62,7 +70,7 @@ class AnimePageComponent extends Component {
                 return res.json();
             })
             .then((res) => {
-                const titles = res.data.attributes.titles
+                const titles = res.data.attributes.titles;
                 const data = {
                     season: res.data.attributes.startDate,
                     episodes: res.data.attributes.episodeCount,
@@ -75,9 +83,15 @@ class AnimePageComponent extends Component {
                             : res.data.attributes.synopsis,
                     imgAnime: res.data.attributes.posterImage.small,
 
-                    title: titles.en === undefined ?
-                        titles.en_jp === undefined ? titles.ja_jp : titles.en_jp :
-                        titles.en
+                    title:
+                        titles.en === undefined
+                            ? titles.en_jp === undefined
+                                ? titles.ja_jp
+                                : titles.en_jp
+                            : titles.en,
+                    alternativeTitle:
+                        titles.ja_jp === undefined ? titles.en_jp : titles.ja_jp,
+                    slug: res.data.attributes.slug,
                 };
 
                 this.setState({
@@ -89,13 +103,14 @@ class AnimePageComponent extends Component {
                     year: data.year,
                     synopsis: data.synopsis,
                     imgAnime: data.imgAnime,
-                    title: data.title
+                    title: data.title,
+                    alternativeTitle: data.alternativeTitle,
+                    slug: data.slug,
                 });
             });
     }
 
     async getElementStatus() {
-
         const docRef = doc(db, 'users', this.state.userUid);
 
         await getDoc(docRef).then((res) => {
@@ -139,16 +154,24 @@ class AnimePageComponent extends Component {
     }
 
     async getElementGlobalStatus(value) {
-        const globalRef = doc(db, 'users', 'global')
+        const globalRef = doc(db, 'users', 'global');
 
         await getDoc(globalRef).then((res) => {
-            const animeId = this.props.idUrl
+            const animeId = this.props.idUrl;
 
-            const dataExists = res._document.data.value.mapValue.fields.animeList.mapValue.fields[animeId] === undefined ? false : true
+            const dataExists =
+                res._document.data.value.mapValue.fields.animeList.mapValue.fields[
+                    animeId
+                ] === undefined
+                    ? false
+                    : true;
 
             if (dataExists == true) {
                 getDoc(globalRef).then((res) => {
-                    const data = res._document.data.value.mapValue.fields.animeList.mapValue.fields[animeId].mapValue.fields
+                    const data =
+                        res._document.data.value.mapValue.fields.animeList.mapValue.fields[
+                            animeId
+                        ].mapValue.fields;
                     this.setState({
                         global: {
                             dropped: data.dropped.integerValue,
@@ -156,9 +179,9 @@ class AnimePageComponent extends Component {
                             seeLater: data.dropped.integerValue,
                             watched: data.dropped.integerValue,
                             watching: data.dropped.integerValue,
-                        }
-                    })
-                })
+                        },
+                    });
+                });
             } else {
                 updateDoc(globalRef, {
                     [`animeList.${animeId}`]: {
@@ -167,13 +190,11 @@ class AnimePageComponent extends Component {
                         seeLater: 0,
                         watched: 0,
                         watching: 0,
-                    }
-                })
-                this.getElementGlobalStatus()
+                    },
+                });
+                this.getElementGlobalStatus();
             }
-
-
-        })
+        });
     }
 
     async handleStatusElement(value, element) {
@@ -187,22 +208,20 @@ class AnimePageComponent extends Component {
         });
 
         //numero de favoritos que aquele anime recebeu
-        const globalDocRef = doc(db, 'users', 'global')
-        var newGlobalValue = 0
+        const globalDocRef = doc(db, 'users', 'global');
+        var newGlobalValue = 0;
 
         if (value === true) {
-            newGlobalValue = (parseInt(this.state.global[element])) + 1
+            newGlobalValue = parseInt(this.state.global[element]) + 1;
 
-            this.getElementGlobalStatus()
+            this.getElementGlobalStatus();
         } else {
-            newGlobalValue = (parseInt(this.state.global[element])) - 1
-
+            newGlobalValue = parseInt(this.state.global[element]) - 1;
         }
 
-
         await updateDoc(globalDocRef, {
-            [`animeList.${idUrl}.${element}`]: newGlobalValue
-        })
+            [`animeList.${idUrl}.${element}`]: newGlobalValue,
+        });
 
         this.setState({
             [element]: value,
@@ -220,10 +239,10 @@ class AnimePageComponent extends Component {
     componentDidMount() {
         this.getElementStatus();
         this.getAnimeInfo();
-        this.getElementGlobalStatus()
+        this.getElementGlobalStatus();
     }
     render() {
-        console.log(this.props.match)
+        console.log(this.props.match);
 
         return (
             <>
@@ -238,84 +257,68 @@ class AnimePageComponent extends Component {
                             borderRadius: '4px 4px',
                         }}
                     >
-                        <Grid container>
-                            <Grid item lg={4}>
+                        <Grid container sx={{ justifyContent: 'space-between' }}>
+                            <Grid item xs={12} sm={7} md={4} lg={4}>
                                 <img src={this.state.imgAnime} width={300} height={400}></img>
                             </Grid>
-                            <Grid item lg={8}>
-                                <Grid container sx={{ ml: 1 }}>
-                                    <Grid item lg={6}>
+                            <Grid item xs={0} sm={5} md={4} lg={6} sx={{ display: { xs: 'none', sm: 'inline-flex', md: 'none', lg: 'none', xl: 'none' }, marginTop: 0 }}>
+                                <Score numberReviews={500} rating={8.5} />
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={8} lg={8}>
+                                <Grid
+                                    container
+                                >
+                                    <Grid item md={8} lg={6}>
                                         <Box>
-                                            <Typography variant='h1' fontSize={25}>
-                                                {this.state.title}
+                                            <Typography variant='h1' fontSize={40}>
+                                                {this.state.slug}
                                             </Typography>
-
                                         </Box>
                                     </Grid>
-                                    <Grid item lg={6}>
-                                        <Box sx={{ float: 'right' }}>
-                                            <Typography
-                                                variant='h1'
-                                                sx={{
-                                                    bgcolor: '#606060',
-                                                    borderRadius: '2px 2px',
-                                                    textAlign: 'center',
-                                                    fontSize: 20,
-                                                }}
-                                            >
-                                                score
-                                            </Typography>
-                                            <Typography sx={{ textAlign: 'center', fontSize: 22 }}>
-                                                8.5
-                                            </Typography>
-                                            <Box>
-                                                <Star color='yellow' />
-                                                <Star color='yellow' />
-                                                <Star color='yellow' />
-                                                <Star color='yellow' />
-                                                <Star color='yellow' />
-                                            </Box>
-                                            <Typography variant='caption'>Ratings 100</Typography>
+                                    <Grid item xs={12} sm={12} md={4} lg={6} sx={{ display: { xs: 'inline-flex', sm: 'none', md: 'inline-flex', lg: 'inline-flex', } }}>
+                                        <Score numberReviews={500} rating={8.5} />
+                                    </Grid>
+                                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                                        <Box>
+                                            <List>
+                                                <ListItem>
+                                                    <Typography>
+                                                        Studio : {this.state.alternativeTitle}
+                                                    </Typography>
+                                                </ListItem>
+                                                <Divider />
+                                                <ListItem>
+                                                    <Typography>Episodes : {this.state.episodes}</Typography>
+                                                </ListItem>
+                                                <Divider />
+                                                <ListItem>
+                                                    <Typography>Status : {this.state.statusAnime}</Typography>
+                                                </ListItem>
+                                                <Divider />
+                                                <ListItem>
+                                                    <Typography>Type : {this.state.type}</Typography>
+                                                </ListItem>
+                                                <Divider />
+                                                <ListItem>
+                                                    <Typography>Year : {this.state.year}</Typography>
+                                                </ListItem>
+                                                <Divider />
+                                            </List>
                                         </Box>
                                     </Grid>
                                 </Grid>
-
-                                <Box sx={{ ml: 1 }}>
-                                    <List>
-                                        <ListItem>Season :</ListItem>
-                                        <Divider />
-                                        <ListItem>
-                                            Studio :<Typography>{this.state.studio}</Typography>
-                                        </ListItem>
-                                        <Divider />
-                                        <ListItem>
-                                            Episodes :<Typography>{this.state.episodes}</Typography>
-                                        </ListItem>
-                                        <Divider />
-                                        <ListItem>
-                                            Status :<Typography>{this.state.statusAnime}</Typography>
-                                        </ListItem>
-                                        <Divider />
-                                        <ListItem>
-                                            Type :<Typography>{this.state.type}</Typography>
-                                        </ListItem>
-                                        <Divider />
-                                        <ListItem>
-                                            Year :<Typography>{this.state.year}</Typography>
-                                        </ListItem>
-                                        <Divider />
-                                    </List>
-                                </Box>
                                 <Box
                                     sx={{
                                         display: 'flex',
                                         justifyContent: 'space-around',
-                                        ml: 1,
                                     }}
                                 >
                                     <Button
-                                        endIcon={<AccessTime color='darkBlue' />}
-                                        color={`${this.state.seeLater === true ? 'orange' : 'dark'}`}
+                                        endIcon={
+                                            <AccessTime color='darkBlue' className='iconBtn' />
+                                        }
+                                        color={`${this.state.seeLater === true ? 'orange' : 'dark'
+                                            }`}
                                         variant='contained'
                                         size='small'
                                         onClick={() =>
@@ -324,12 +327,16 @@ class AnimePageComponent extends Component {
                                                 'seeLater'
                                             )
                                         }
+                                        className={'btnOnlyIcon'}
                                     >
-                                        See later
+                                        <Typography className={'btnNameHide btnNameSize'}>
+                                            See later
+                                        </Typography>
                                     </Button>
                                     <Button
-                                        endIcon={<Visibility color='white' />}
-                                        color={`${this.state.watching === true ? 'orange' : 'dark'}`}
+                                        endIcon={<Visibility color='white' className='iconBtn' />}
+                                        color={`${this.state.watching === true ? 'orange' : 'dark'
+                                            }`}
                                         variant='contained'
                                         size='small'
                                         onClick={() =>
@@ -338,11 +345,14 @@ class AnimePageComponent extends Component {
                                                 'watching'
                                             )
                                         }
+                                        className={'btnOnlyIcon'}
                                     >
-                                        Watching
+                                        <Typography className={'btnNameHide btnNameSize'}>
+                                            Watching
+                                        </Typography>
                                     </Button>
                                     <Button
-                                        endIcon={<Star color='yellow' />}
+                                        endIcon={<Star color='yellow' className='iconBtn' />}
                                         color={`${this.state.favorit === true ? 'orange' : 'dark'}`}
                                         variant='contained'
                                         size='small'
@@ -352,11 +362,14 @@ class AnimePageComponent extends Component {
                                                 'favorit'
                                             )
                                         }
+                                        className={'btnOnlyIcon'}
                                     >
-                                        Favorit
+                                        <Typography className={'btnNameHide btnNameSize'}>
+                                            Favorit
+                                        </Typography>
                                     </Button>
                                     <Button
-                                        endIcon={<HistorySharp color='teal' />}
+                                        endIcon={<HistorySharp color='teal' className='iconBtn' />}
                                         color={`${this.state.watched === true ? 'orange' : 'dark'}`}
                                         variant='contained'
                                         size='small'
@@ -366,11 +379,14 @@ class AnimePageComponent extends Component {
                                                 'watched'
                                             )
                                         }
+                                        className={'btnOnlyIcon'}
                                     >
-                                        Watched
+                                        <Typography className={'btnNameHide btnNameSize'}>
+                                            Watched
+                                        </Typography>
                                     </Button>
                                     <Button
-                                        endIcon={<Delete color='secondary' />}
+                                        endIcon={<Delete color='secondary' className='iconBtn' />}
                                         color={`${this.state.dropped === true ? 'orange' : 'dark'}`}
                                         variant='contained'
                                         size='small'
@@ -380,8 +396,11 @@ class AnimePageComponent extends Component {
                                                 'dropped'
                                             )
                                         }
+                                        className={'btnOnlyIcon'}
                                     >
-                                        Dropped
+                                        <Typography className={'btnNameHide btnNameSize'}>
+                                            Dropped
+                                        </Typography>
                                     </Button>
                                 </Box>
                             </Grid>
@@ -401,11 +420,12 @@ class AnimePageComponent extends Component {
 }
 
 const AnimePage = (props) => {
-    const { id } = useParams()
-    return <>
-        <AnimePageComponent idUrl={id} />
-    </>
-
-}
+    const { id } = useParams();
+    return (
+        <>
+            <AnimePageComponent idUrl={id} />
+        </>
+    );
+};
 
 export default AnimePage;

@@ -1,0 +1,16 @@
+@media only screen and (max-width: 670px) {
+  .btnOnlyIcon {
+    min-width: 50px !important;
+    min-height: 30px !important;
+  }
+  .iconBtn {
+    margin-left: -8px !important;
+    font-size: 25px !important;
+  }
+  .btnNameHide {
+    display: none;
+  }
+}
+.btnNameSize {
+  font-size: 13px !important;
+}

@@ -1,7 +1,7 @@
 {
-  "homepage": "https://jox404.github.io/loja",
   "name": "loja",
   "version": "0.1.0",
+  "homepage": "loja/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.7.1",

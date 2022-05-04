@@ -17,8 +17,11 @@ class Footer extends Component {
     render() {
         return (
             <>
-                <Box bgcolor={this.props.bgColor} component={'footer'}>
-                    <Divider sx={{ bgcolor: `${this.props.colorDivider}`, mb: 1 }} />
+                <Box bgcolor={this.props.bgColor} component={'footer'} sx={{ width: '100%' }}>
+
+                    <Box justifyContent='center' display='flex'>
+                        <Divider sx={{ bgcolor: `${this.props.colorDivider}`, mb: 1, width: '80%' }} />
+                    </Box>
                     <Box justifyContent='center' display='flex'>
                         <Box justifyContent='space-between' display='flex' width={150}>
                             <a href="https://github.com/jox404"><GitHub sx={{ fontSize: 35, color: '#fff' }} /></a>

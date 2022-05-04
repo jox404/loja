@@ -24,6 +24,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { getStorage, ref, uploadBytes } from 'firebase/storage'
+import Footer from '../Footer/Footer';
 
 
 
@@ -90,7 +91,7 @@ class Section extends Component {
 
     return (
       <>
-        <Container maxWidth='lg' sx={{ marginTop: 7, bgcolor: '#95989c' }}>
+        <Container maxWidth='lg' sx={{ marginTop: 7, bgcolor: '#95989c', minHeight: '100vh' }}>
           <Typography
             variant='h5'
             align='center'
@@ -169,7 +170,11 @@ class Section extends Component {
               </Button>
             </ButtonGroup>
           </Box>
+
         </Container>
+        <Box sx={{ justifyContent: 'space-around', display: 'flex' }}>
+          <Footer bgColor={"#95989c"} color={"#F7F5F2"} dividerColor={"#gferty"} />
+        </Box>
       </>
     );
   }

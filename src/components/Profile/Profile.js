@@ -120,9 +120,7 @@ class Profile extends Component {
         return (
             <>
                 <NavBar />
-                <Box className="profileBody" >
-
-
+                <Box className="profileBody" sx={{ maxHeight: '85vh' }}>
                     <Box minHeight={300} sx={{
                         backgroundImage:
                             `url(${this.state.backgroundImage})`,
@@ -205,9 +203,13 @@ class Profile extends Component {
                                 </Grid>
                             </Grid>
                         </Box>
-                        <Footer bgColor={"#383838"} color={"#F7F5F2"} dividerColor={"#gferty"} />
+
                     </Container>
+                    <Box sx={{ justifyContent: 'space-around', display: 'flex' }}>
+                        <Footer bgColor={"#383838"} color={"#F7F5F2"} colorDivider={"#0a66c2"} />
+                    </Box>
                 </Box>
+
 
             </>
         )
