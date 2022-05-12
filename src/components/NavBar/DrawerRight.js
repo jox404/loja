@@ -37,13 +37,13 @@ class DrawerRight extends Component {
     signOut(outh)
       .then(() => {
         console.log('você saiu');
+        window.location.reload()
       })
       .catch((error) => {
         console.log(error);
       });
   }
   render() {
-    console.log(this.props.backgroundImage)
     return (
       <>
         <Box className='drawerBgColor'>

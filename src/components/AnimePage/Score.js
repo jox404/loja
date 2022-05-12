@@ -3,6 +3,9 @@ import { Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { Component, react } from 'react'
 
+//CSS
+import './style/style.css'
+
 class Score extends Component {
     constructor(props) {
         super(props)
@@ -15,13 +18,14 @@ class Score extends Component {
                 <Box
                     sx={{
                         float: 'right',
-                        width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' },
+                        width: { xs: '100%', sm: '100%', md: '100%', lg: '100%' }, backgroundColor: '#191919'
                     }}
+                    className={'border'}
                 >
                     <Typography
                         variant='h1'
                         sx={{
-                            bgcolor: '#606060',
+                            bgcolor: '#050505',
                             borderRadius: '2px 2px',
                             textAlign: 'center',
                             fontSize: 20,

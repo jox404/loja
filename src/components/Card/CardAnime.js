@@ -31,7 +31,7 @@ class CardAnime extends Component {
   };
 
   redirectPage(id) {
-    window.location.href = `http://localhost:3000/Anime/${id}`
+    window.location.href = `Anime/${id}`
   }
 
   render() {
@@ -42,6 +42,7 @@ class CardAnime extends Component {
           sx={{
             display: 'flex',
             justifyItems: 'center',
+
           }}
         >
           <Box
@@ -54,9 +55,10 @@ class CardAnime extends Component {
               marginRight: 'auto',
               marginTop: 0,
               marginBottom: 5,
+
             }}
           >
-            <Card elevation={15}>
+            <Card elevation={15} sx={{ bgcolor: '#212121' }}>
               <CardHeader
                 title={name}
                 sx={{ overflow: 'auto', pb: 0, height: 70, fontSize: 30, cursor: 'pointer' }}
@@ -80,7 +82,7 @@ class CardAnime extends Component {
                 <Typography
                   varinat='body2'
                   textAlign={'justify'}
-                  sx={{ maxHeight: 100, minHeight: 100, overflow: 'auto' }}
+                  sx={{ maxHeight: 100, minHeight: 100, overflow: 'auto', paddingRight: '1px' }}
                 >
                   {synopsis}
                 </Typography>

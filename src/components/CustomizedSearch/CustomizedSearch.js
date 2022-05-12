@@ -11,8 +11,10 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { React, Component } from 'react';
+
 import CardAnime from '../Card/CardAnime';
 import NavBar from '../NavBar/NavBar';
+import Footer from '../Footer/Footer'
 
 //ICONS
 import CircularProgress from '@mui/material/CircularProgress';
@@ -28,10 +30,10 @@ class CustomizedSearch extends Component {
       linksButton: [],
       currentPage: 0,
       loadingAnimes: true,
-      animeGenres: [],
+      animeFilters: [],
       selectedGenres: [],
-      nextGender: undefined,
-      lastGender: '',
+      nextFilter: undefined,
+      lastFilter: '',
       loadingGenres: true,
       showGender: false,
       showCategory: false,
@@ -73,33 +75,33 @@ class CustomizedSearch extends Component {
     })
   }
 
-  async handleAnimesGenres() {
-    const firstLink = 'https://kitsu.io/api/edge/genres?page%5Blimit%5D=10&page%5Boffset%5D=0&sort=name'
+  async listFiltersAvailable(filter, getValue, sortBy) {
+    const firstLink = `https://kitsu.io/api/edge/${filter}?page%5Blimit%5D=10&page%5Boffset%5D=0&sort=${sortBy}`
     var data = []
-    for (var i = firstLink; i !== undefined; i = this.state.nextGender) {
+    //the api provides a request with a limit of 10 filters(genres, category...)
+    for (var i = firstLink; i !== undefined; i = this.state.nextFilter) {
       var link =
-        this.state.nextGender === undefined
-          ? 'https://kitsu.io/api/edge/genres?page%5Blimit%5D=10&page%5Boffset%5D=0&sort=name'
-          : this.state.nextGender;
+        this.state.nextFilter === undefined
+          ? `https://kitsu.io/api/edge/${filter}?page%5Blimit%5D=10&page%5Boffset%5D=0&sort=${sortBy}`
+          : this.state.nextFilter;
       await fetch(link, { method: 'get' })
         .then((res) => {
           return res.json();
         })
         .then((res) => {
-          const genres = res.data.map((gender) => {
-            const animeGender = gender.attributes.name;
-            data.push(animeGender)
+          const filters = res.data.map((element) => {
+            const animeFilters = element.attributes[getValue];
+            data.push(animeFilters)
           });
           this.setState({
-            lastGender: res.links.last,
-            nextGender: res.links.next,
+            lastFilter: res.links.last,
+            nextFilter: res.links.next,
           });
         });
-
     }
     this.setState({
-      animeGenres: data,
-      loadingGenres: false
+      animeFilters: data,
+      loadingGenres: false,
     });
 
   }
@@ -135,7 +137,10 @@ class CustomizedSearch extends Component {
   componentDidMount() {
     this.filterByCategori('genres', 'comedy', 8, undefined);
 
-    this.handleAnimesGenres()
+    /* this.listFiltersAvailable('categories', 'slug', 'id') */
+    this.listFiltersAvailable('genres', 'name', 'name')
+
+    console.log(this.state.animeFilters)
   }
   render() {
     return (
@@ -178,7 +183,7 @@ class CustomizedSearch extends Component {
             </Box>
             <FormGroup>
               <Grid container>
-                {this.state.animeGenres.map((category, index) => {
+                {this.state.animeFilters.map((category, index) => {
                   return (
                     <Grid
                       item
@@ -192,6 +197,7 @@ class CustomizedSearch extends Component {
                         flexDirection: 'row',
                         paddingLeft: { xs: 2, sm: 6, lg: 0, xl: 0 },
                       }}
+                      key={index}
                     >
                       <FormControlLabel
                         key={index}
@@ -232,6 +238,7 @@ class CustomizedSearch extends Component {
                     anime.attributes.synopsis === ''
                       ? "Sorry, We don't have a synopsis for this anime"
                       : anime.attributes.synopsis,
+                  id: anime.id,
                 };
 
                 return (
@@ -248,6 +255,7 @@ class CustomizedSearch extends Component {
                       name={data.name}
                       bgImage={data.bgImage}
                       synopsis={data.synopsis}
+                      id={data.id}
                     />
                   </Grid>
                 );
@@ -331,6 +339,9 @@ class CustomizedSearch extends Component {
                 Last
               </Button>
             </ButtonGroup>
+          </Box>
+          <Box>
+            <Footer />
           </Box>
         </Container >
       </>

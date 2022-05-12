@@ -1,13 +1,15 @@
 import PageRoutes from './routes/PageRoutes';
+import PageRoutes2 from './routes/PageRoutes2';
 import { BrowserRouter } from 'react-router-dom';
+import Section from './components/Section/Section';
+import CardAnime from './components/Card/CardAnime';
 
 function App() {
-  return (
-    <div style={{ backgroundColor: '#95989c' }}>
-      <BrowserRouter /* basename={process.env.PUBLIC_URL} */>
-        <PageRoutes />
-      </BrowserRouter>
-    </div>
+  return (<>
+    <BrowserRouter>
+      <PageRoutes />
+    </BrowserRouter>
+  </>
   );
 }
 

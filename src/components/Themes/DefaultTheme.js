@@ -1,16 +1,24 @@
-import { blue, orange } from '@mui/material/colors';
+import { blue, deepOrange, grey, orange } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 import { dark } from '@mui/material/styles/createPalette';
 
 const DefaultTheme = createTheme({
   palette: {
+    background: {
+      default: grey[500],
+      paper: grey[500],
+    },
+    text: {
+      primary: '#fff',
+      secondary: grey[500],
+    },
     secondary: {
       main: '#FF2626',
       dark: '#d42020',
       light: '#db2323',
       contrastText: '#fff',
     },
-    darkWhite: {
+    main: {
       main: '#393E46',
       dark: '#e04300',
       light: '#ff5b14',
@@ -26,7 +34,7 @@ const DefaultTheme = createTheme({
       main: '#F8B400'
     },
     dark: {
-      main: '#1B1A17',
+      main: '#050505',
       dark: '#30302e',
       light: '#fff',
       contrastText: '#fff',

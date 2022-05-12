@@ -19,6 +19,9 @@ class DrawerLeft extends Component {
     super(props);
     this.state = {};
   }
+  handleRedirect(rote) {
+    window.location.replace(rote)
+  }
   render() {
     return (
       <>
@@ -40,7 +43,7 @@ class DrawerLeft extends Component {
             <Divider />
             <ListItem className='itemList'>Most Viewed</ListItem>
             <Divider />
-            <ListItem className='itemList'>Customized search</ListItem>
+            <ListItem className='itemList' onClick={() => { this.handleRedirect("/customizedSearch") }}>Customized search</ListItem>
             <Divider />
             <ListItem className='itemList'>Best of The Day</ListItem>
             <Divider />

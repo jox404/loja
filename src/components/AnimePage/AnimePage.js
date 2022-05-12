@@ -33,7 +33,7 @@ import { render } from '@testing-library/react';
 
 //CSS
 import './style/style.css';
-import { fontSize } from '@mui/system';
+import { bgcolor, fontSize } from '@mui/system';
 import Score from './Score';
 
 class AnimePageComponent extends Component {
@@ -41,7 +41,7 @@ class AnimePageComponent extends Component {
         super(props);
 
         this.state = {
-            userUid: 'g0dNiiSCrRf0xbPbxE9Klbcuq2i2',
+            userUid: 'j5pg3pRFtwWOayVOe95gLgkTNql2',
             season: '',
             studio: '',
             episodes: '',
@@ -59,6 +59,7 @@ class AnimePageComponent extends Component {
             watched: false,
             dropped: false,
             global: {},
+            animesInfo: {}
         };
     }
 
@@ -110,10 +111,22 @@ class AnimePageComponent extends Component {
             });
     }
 
+    /* async setUid() {
+        const uid = getAuth().currentUser.uid
+        this.setState({
+            userUid: uid
+        })
+    } */
+
     async getElementStatus() {
+        /* await this.setUid */
         const docRef = doc(db, 'users', this.state.userUid);
 
         await getDoc(docRef).then((res) => {
+            this.setState({
+                animesInfo: res._document.data.value.mapValue.fields.animesInfo.mapValue.fields
+            })
+
             const animeId = this.props.idUrl;
 
             const dataExists =
@@ -149,6 +162,7 @@ class AnimePageComponent extends Component {
                         watching: false,
                     },
                 });
+
             }
         });
     }
@@ -198,34 +212,58 @@ class AnimePageComponent extends Component {
     }
 
     async handleStatusElement(value, element) {
+
+
         const docRef = doc(db, 'users', this.state.userUid);
+
         const idUrl = this.props.idUrl.toLocaleString();
 
-        const animeList = 'animeList.' + idUrl + '.' + element;
-
+        //update nos status do anime com relação ao usuário
         await updateDoc(docRef, {
-            [animeList]: value,
+            [`animeList.${idUrl}.${element}`]: value,
         });
-
-        //numero de favoritos que aquele anime recebeu
-        const globalDocRef = doc(db, 'users', 'global');
-        var newGlobalValue = 0;
-
-        if (value === true) {
-            newGlobalValue = parseInt(this.state.global[element]) + 1;
-
-            this.getElementGlobalStatus();
-        } else {
-            newGlobalValue = parseInt(this.state.global[element]) - 1;
-        }
-
-        await updateDoc(globalDocRef, {
-            [`animeList.${idUrl}.${element}`]: newGlobalValue,
-        });
-
         this.setState({
             [element]: value,
         });
+
+        //faz um update no número de "See Later","Favorit"...etc que aquele anime recebeu
+        const globalDocRef = doc(db, 'users', 'global');
+        const oldValueGlobal = parseInt(this.state.global[element])
+
+        if (value === true) {
+            const newGlobalValue = oldValueGlobal + 1;
+
+            console.log(oldValueGlobal)
+            updateDoc(globalDocRef, {
+                [`animeList.${idUrl}.${element}`]: newGlobalValue,
+            })
+
+            this.getElementGlobalStatus();
+        } else {
+            const newGlobalValue = oldValueGlobal - 1;
+
+            updateDoc(globalDocRef, {
+                [`animeList.${idUrl}.${element}`]: newGlobalValue,
+            })
+
+            this.getElementGlobalStatus();
+        }
+        //atualiza a lista "InfoAnimes" do usuario
+        const oldValue = parseInt(this.state.animesInfo[element].integerValue)
+        if (value === true) {
+            const newValue = oldValue + 1
+            await updateDoc(docRef, {
+                [`animesInfo.${element}`]: newValue,
+            })
+            this.getElementStatus()//atualiza o this.state
+        } else {
+            const newValue = oldValue - 1
+            await updateDoc(docRef, {
+                [`animesInfo.${element}`]: newValue,
+            })
+            this.getElementStatus()//atualiza o this.state
+        }
+
     }
 
     sendStatusAnimeListUser(value, element) {
@@ -242,20 +280,20 @@ class AnimePageComponent extends Component {
         this.getElementGlobalStatus();
     }
     render() {
-        console.log(this.props.match);
-
         return (
             <>
                 <NavBar />
-                <Container maxWidth='lg'>
+                <Container maxWidth='lg' sx={{ mt: 3 }}>
                     <Box
                         sx={{
-                            mt: 2,
                             maxWidth: 1000,
-                            bgcolor: '#fff',
                             p: 2,
-                            borderRadius: '4px 4px',
+                            marginLeft: 'auto',
+                            marginRight: 'auto',
                         }}
+                        bgcolor={'#212121'}
+                        color={'#fff'}
+                        className={'border'}
                     >
                         <Grid container sx={{ justifyContent: 'space-between' }}>
                             <Grid item xs={12} sm={7} md={4} lg={4}>
@@ -278,7 +316,7 @@ class AnimePageComponent extends Component {
                                     <Grid item xs={12} sm={12} md={4} lg={6} sx={{ display: { xs: 'inline-flex', sm: 'none', md: 'inline-flex', lg: 'inline-flex', } }}>
                                         <Score numberReviews={500} rating={8.5} />
                                     </Grid>
-                                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                                    <Grid item xs={10} sm={12} md={12} lg={12}>
                                         <Box>
                                             <List>
                                                 <ListItem>
@@ -306,114 +344,117 @@ class AnimePageComponent extends Component {
                                             </List>
                                         </Box>
                                     </Grid>
+
+                                    <Grid item xs={2} sm={12} md={12} lg={12}>
+                                        <Box
+                                            className={'groupBtnStatus'}
+                                        >
+                                            <Button
+                                                endIcon={
+                                                    <AccessTime color='darkBlue' className='iconBtn' />
+                                                }
+                                                color={`${this.state.seeLater === true ? 'orange' : 'dark'
+                                                    }`}
+                                                variant='contained'
+                                                size='small'
+                                                onClick={() =>
+                                                    this.sendStatusAnimeListUser(
+                                                        this.state.seeLater,
+                                                        'seeLater'
+                                                    )
+                                                }
+                                                className={'btnOnlyIcon btnStatus'}
+                                            >
+                                                <Typography className={'btnNameHide btnNameSize'}>
+                                                    See later
+                                                </Typography>
+                                            </Button>
+                                            <Button
+                                                endIcon={<Visibility color='white' className='iconBtn' />}
+                                                color={`${this.state.watching === true ? 'orange' : 'dark'
+                                                    }`}
+                                                variant='contained'
+                                                size='small'
+                                                onClick={() =>
+                                                    this.sendStatusAnimeListUser(
+                                                        this.state.watching,
+                                                        'watching'
+                                                    )
+                                                }
+                                                className={'btnOnlyIcon btnStatus'}
+                                            >
+                                                <Typography className={'btnNameHide btnNameSize'}>
+                                                    Watching
+                                                </Typography>
+                                            </Button>
+                                            <Button
+                                                endIcon={<Star color='yellow' className='iconBtn' />}
+                                                color={`${this.state.favorit === true ? 'orange' : 'dark'}`}
+                                                variant='contained'
+                                                size='small'
+                                                onClick={() =>
+                                                    this.sendStatusAnimeListUser(
+                                                        this.state.favorit,
+                                                        'favorit'
+                                                    )
+                                                }
+                                                className={'btnOnlyIcon btnStatus'}
+                                            >
+                                                <Typography className={'btnNameHide btnNameSize'}>
+                                                    Favorit
+                                                </Typography>
+                                            </Button>
+                                            <Button
+                                                endIcon={<HistorySharp color='teal' className='iconBtn' />}
+                                                color={`${this.state.watched === true ? 'orange' : 'dark'}`}
+                                                variant='contained'
+                                                size='small'
+                                                onClick={() =>
+                                                    this.sendStatusAnimeListUser(
+                                                        this.state.watched,
+                                                        'watched'
+                                                    )
+                                                }
+                                                className={'btnOnlyIcon btnStatus'}
+                                            >
+                                                <Typography className={'btnNameHide btnNameSize'}>
+                                                    Watched
+                                                </Typography>
+                                            </Button>
+                                            <Button
+                                                endIcon={<Delete color='secondary' className='iconBtn' />}
+                                                color={`${this.state.dropped === true ? 'orange' : 'dark'}`}
+                                                variant='contained'
+                                                size='small'
+                                                onClick={() =>
+                                                    this.sendStatusAnimeListUser(
+                                                        this.state.dropped,
+                                                        'dropped'
+                                                    )
+                                                }
+                                                className={'btnOnlyIcon btnStatus'}
+                                            >
+                                                <Typography className={'btnNameHide btnNameSize'}>
+                                                    Dropped
+                                                </Typography>
+                                            </Button>
+                                        </Box>
+                                    </Grid>
                                 </Grid>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        justifyContent: 'space-around',
-                                    }}
-                                >
-                                    <Button
-                                        endIcon={
-                                            <AccessTime color='darkBlue' className='iconBtn' />
-                                        }
-                                        color={`${this.state.seeLater === true ? 'orange' : 'dark'
-                                            }`}
-                                        variant='contained'
-                                        size='small'
-                                        onClick={() =>
-                                            this.sendStatusAnimeListUser(
-                                                this.state.seeLater,
-                                                'seeLater'
-                                            )
-                                        }
-                                        className={'btnOnlyIcon'}
-                                    >
-                                        <Typography className={'btnNameHide btnNameSize'}>
-                                            See later
-                                        </Typography>
-                                    </Button>
-                                    <Button
-                                        endIcon={<Visibility color='white' className='iconBtn' />}
-                                        color={`${this.state.watching === true ? 'orange' : 'dark'
-                                            }`}
-                                        variant='contained'
-                                        size='small'
-                                        onClick={() =>
-                                            this.sendStatusAnimeListUser(
-                                                this.state.watching,
-                                                'watching'
-                                            )
-                                        }
-                                        className={'btnOnlyIcon'}
-                                    >
-                                        <Typography className={'btnNameHide btnNameSize'}>
-                                            Watching
-                                        </Typography>
-                                    </Button>
-                                    <Button
-                                        endIcon={<Star color='yellow' className='iconBtn' />}
-                                        color={`${this.state.favorit === true ? 'orange' : 'dark'}`}
-                                        variant='contained'
-                                        size='small'
-                                        onClick={() =>
-                                            this.sendStatusAnimeListUser(
-                                                this.state.favorit,
-                                                'favorit'
-                                            )
-                                        }
-                                        className={'btnOnlyIcon'}
-                                    >
-                                        <Typography className={'btnNameHide btnNameSize'}>
-                                            Favorit
-                                        </Typography>
-                                    </Button>
-                                    <Button
-                                        endIcon={<HistorySharp color='teal' className='iconBtn' />}
-                                        color={`${this.state.watched === true ? 'orange' : 'dark'}`}
-                                        variant='contained'
-                                        size='small'
-                                        onClick={() =>
-                                            this.sendStatusAnimeListUser(
-                                                this.state.watched,
-                                                'watched'
-                                            )
-                                        }
-                                        className={'btnOnlyIcon'}
-                                    >
-                                        <Typography className={'btnNameHide btnNameSize'}>
-                                            Watched
-                                        </Typography>
-                                    </Button>
-                                    <Button
-                                        endIcon={<Delete color='secondary' className='iconBtn' />}
-                                        color={`${this.state.dropped === true ? 'orange' : 'dark'}`}
-                                        variant='contained'
-                                        size='small'
-                                        onClick={() =>
-                                            this.sendStatusAnimeListUser(
-                                                this.state.dropped,
-                                                'dropped'
-                                            )
-                                        }
-                                        className={'btnOnlyIcon'}
-                                    >
-                                        <Typography className={'btnNameHide btnNameSize'}>
-                                            Dropped
-                                        </Typography>
-                                    </Button>
-                                </Box>
                             </Grid>
                         </Grid>
-                        <Box>
+                        <Box >
                             <Typography sx={{ textAlign: 'justify' }}>
                                 <b>Synopsis:</b>
                                 {this.state.synopsis}
                             </Typography>
                         </Box>
                     </Box>
+                    <Box sx={{ display: 'block', }} className='footer'>
+                        <Footer />
+                    </Box>
                 </Container>
-                <Footer bgColor={'white'} />
+
             </>
         );
     }

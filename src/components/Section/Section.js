@@ -91,7 +91,7 @@ class Section extends Component {
 
     return (
       <>
-        <Container maxWidth='lg' sx={{ marginTop: 7, bgcolor: '#95989c', minHeight: '100vh' }}>
+        <Container maxWidth='lg' sx={{ marginTop: 7, minHeight: '100vh' }}>
           <Typography
             variant='h5'
             align='center'

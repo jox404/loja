@@ -13,7 +13,7 @@ class HomePage extends Component {
     return (
       <>
         <Box>
-          <NavBar subscribe={true} signIn={true} />
+          <NavBar />
           <Section />
         </Box>
       </>

@@ -17,11 +17,11 @@ const LightTheme = createTheme({
     info: {
       main: '#FFC600',
     },
-    darkWhite: {
+    main: {
       main: '#393E46',
     },
     milk: {
-      main: '#F7F5F2',
+      main: '#fff',
     },
   },
 });

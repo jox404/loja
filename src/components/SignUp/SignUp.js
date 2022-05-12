@@ -92,9 +92,9 @@ class SignUp extends Component {
     });
   } */
 
-  cretateUser(email, password) {
+  async cretateUser(email, password) {
     const auth = getAuth();
-    createUserWithEmailAndPassword(auth, email, password)
+    await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredendial) => {
         const user = userCredendial.user;
         const uid = userCredendial.user.uid;
@@ -104,12 +104,30 @@ class SignUp extends Component {
           email: this.state.email,
           backgroundImage: '',
           profileImage: '',
+          animesInfo: {
+            dropped: 0,
+            favorit: 0,
+            seeLater: 0,
+            watched: 0,
+            watching: 0,
+          },
+          animeList: {
+            /* seeLater: false,
+            watching: false,
+            favorit: false,
+            watched: false,
+            dropped: false, */
+          }
+        }
+        ).then(() => {
+          window.alert('Registration successful')
+          window.location.replace('/')
         })
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-      });
+      })
   }
 
   async clearErro() {

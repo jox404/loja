@@ -22,7 +22,8 @@ import './Style/style.css';
 import DrawerMenu from '../Drawer/Drawer';
 import DrawerRight from './DrawerRight';
 import DrawerLeft from './DrawerLeft';
-
+/* IMAGES */
+import logo from '../../img/logo-dark.png'
 /* ICONS */
 import MenuOpenDrawerIcon from '@mui/icons-material/Menu';
 import { Login, Menu, Search } from '@mui/icons-material';
@@ -52,7 +53,7 @@ const theme = createTheme({
     info: {
       main: '#FFC600',
     },
-    darkWhite: {
+    main: {
       main: '#393E46',
     },
     milk: {
@@ -67,7 +68,7 @@ class NavBar extends Component {
     this.state = {
       validateUser: false,
       user: {},
-      signIn: false,
+      signIn: true,
       subscribe: true,
       displayName: '',
       email: '',
@@ -80,7 +81,7 @@ class NavBar extends Component {
     };
   }
 
-  handleShowDrawer = (side, status) => {
+  async handleShowDrawer(side, status) {
     side === 'right'
       ? this.setState({
         showDrawerRight: status,
@@ -92,7 +93,7 @@ class NavBar extends Component {
 
   async handleAuth() {
     const auth = getAuth()
-    onAuthStateChanged(auth, (user) => {
+    await onAuthStateChanged(auth, (user) => {
       if (user) {
 
         const uid = user.uid
@@ -110,9 +111,11 @@ class NavBar extends Component {
             profileImage: data.profileImage.stringValue,
           })
         })
-
         console.log("User is sign In")
       } else {
+        this.setState({
+          signIn: false,
+        })
         console.log("User is signed out")
       }
     })
@@ -123,267 +126,232 @@ class NavBar extends Component {
   }
   render() {
 
-    const logo = ['A', 'N', 'I', 'M', 'E'];
+    /* const logo = ['A', 'N', 'I', 'M', 'E']; */
     const colors = ['#e83a14', '#ff6c09', '#fd922d', '#ff6c09', '#e83a14'];
     return (
       <>
-        <ThemeProvider theme={DefaultTheme}>
-          <Box sx={{}}>
-            <AppBar color='darkWhite' elevation={1} position='relative'>
-              <Container maxWidth='xl' sx={{ padding: 0 }}>
-                <Toolbar sx={{ padding: 0, margin: 0 }}>
-                  <Grid container>
-                    <Grid
-                      item
-                      lx={5}
-                      lg={5}
-                      md={5}
-                      sm={2}
-                      xs={2}
-                      sx={{
-                        height: 60,
-                        paddingTop: {
-                          xs: 0,
-                          sm: 0,
-                          md: 0,
-                          lg: `${this.state.signIn == true ? 19.5 : 8}px`,
-                          xl: `${this.state.signIn == true ? 19.5 : 8}px`,
-                        },
-                      }}
+        <Box >
+          <AppBar elevation={1} position='relative' sx={{ backgroundColor: '#212121' }}>
+            <Container maxWidth='xl' sx={{ padding: 0 }}>
+              <Toolbar sx={{ padding: 0, margin: 0 }}>
+                <Grid container>
+                  <Grid
+                    item
+                    lx={5}
+                    lg={5}
+                    md={5}
+                    sm={2}
+                    xs={2}
+                    sx={{
+                      height: 60,
+                      paddingTop: {
+                        xs: 0,
+                        sm: 0,
+                        md: 0,
+                        lg: `${19.5}px`,
+                        xl: `${19.5}px`,
+                      },
+                    }}
+                  >
+                    <Box
+                      align='left'
+                      flexGrow={1}
+                      sx={{}}
+                      component='div'
                     >
+                      <IconButton
+                        color='warning'
+                        size='large'
+                        onClick={() => this.handleShowDrawer('left', true)}
+                        sx={{
+                          display: {
+                            xs: 'inline-flex',
+                            sm: 'inline-flex',
+                            md: 'inline-flex',
+                            lg: 'none',
+                          },
+                        }}
+                      >
+                        <MenuOpenDrawerIcon fontSize='large' />
+                      </IconButton>
                       <Typography
-                        align='left'
-                        flexGrow={1}
-                        sx={{}}
+                        className='navItensContainer'
+                        display={{
+                          xs: 'none',
+                          sm: 'none',
+                          md: 'none',
+                          lg: 'flex',
+                          xl: 'flex',
+                        }}
                         component='div'
                       >
-                        <IconButton
-                          color='warning'
-                          size='large'
-                          onClick={() => this.handleShowDrawer('left', true)}
-                          sx={{
-                            display: {
-                              xs: 'inline-flex',
-                              sm: 'inline-flex',
-                              md: 'inline-flex',
-                              lg: 'none',
-                            },
-                          }}
+                        <a className='navItem' href='###' id='releases'>
+                          Releases
+                        </a>
+                        <a className='navItem' href='###' id='mostViewed'>
+                          Most Viewed
+                        </a>
+                        <a
+                          className='navItem'
+                          href='/customizedSearch'
+                          id='customizedSearch'
                         >
-                          <MenuOpenDrawerIcon fontSize='large' />
-                        </IconButton>
-                        <Typography
-                          className='navItensContainer'
-                          display={{
-                            xs: 'none',
-                            sm: 'none',
-                            md: 'none',
-                            lg: 'flex',
-                            xl: 'flex',
-                          }}
-                          component='div'
-                        >
-                          <a className='navItem' href='###' id='releases'>
-                            Releases
-                          </a>
-                          <a className='navItem' href='###' id='mostViewed'>
-                            Most Viewed
-                          </a>
-                          <a
-                            className='navItem'
-                            href='/customizedSearch'
-                            id='customizedSearch'
-                          >
-                            Customized Search
-                          </a>
-                          <a className='navItem' href='###' id='theBest'>
-                            The Best
-                          </a>
-                        </Typography>
+                          Customized Search
+                        </a>
+                        <a className='navItem' href='###' id='theBest'>
+                          The Best
+                        </a>
                       </Typography>
-                    </Grid>
-                    <Grid
-                      item
-                      lx={2}
-                      lg={2}
-                      md={2}
-                      sm={8}
-                      xs={8}
-                      sx={{
-                        paddingTop: {
-                          xs: 2,
-                          sm: 2,
-                          md: 2,
-                          lg: 1,
-                          xl: 1,
-                        },
-                      }}
-                    >
-                      <Typography
-                        align='center'
-                        flexGrow={1}
-                        color='#000'
-                        component='div'
-                        sx={{ margin: 0, padding: 0 }}
-                      >
-                        <Typography
-                          sx={{
-                            display: 'inline-flex',
-                            justifyContent: 'space-around',
-                            margin: 0,
-                            padding: 0,
-                            /* paddingTop: {
-                              xs: 0,
-                              sm: 0,
-                              md: 0,
-                              lg: `${
-                                this.state.user.signIn === true ? 0 : 0
-                              }px`,
-                              xl: `${
-                                this.state.user.signIn === true ?  : 7
-                              }px`,
-                            }, */
-                          }}
-                          component='div'
-                        >
-                          {logo.map((txt, index) => {
-                            return (
-                              <a
-                                href='./'
-                                style={{
-                                  color: colors[index],
-                                  fontSize: '18pt',
-                                  padding: '0px',
-                                  margin: '0px',
-                                }}
-                                key={index}
-                              >
-                                {txt}
-                              </a>
-                            );
-                          })}
-                        </Typography>
-                      </Typography>
-                    </Grid>
-                    <Grid item lx={5} lg={5} md={5} sm={2} xs={2}>
-                      <Typography align='right' flexGrow={1} component='div'>
-                        <Box
-                          display={{
-                            xs: 'none',
-                            sm: 'none',
-                            md: 'none',
-                            lg: 'inline-flex',
-                            xl: 'inline-flex',
-                          }}
-                        >
-                          <InputBase placeholder='Search Anime' />
-                          <IconButton>
-                            <Search />
-                          </IconButton>
-                        </Box>
-                        {this.state.signIn === true ? (
-                          <>
-                            <IconButton
-                              color='darkWhite'
-                              onClick={() =>
-                                this.handleShowDrawer('right', true)
-                              }
-                              sx={{ display: 'inline-flex' }}
-                            >
-                              <Avatar
-                                className='avatar'
-                                src={this.state.profileImage}
-                                sx={{
-                                  width: 50,
-                                  height: 50,
-                                }}
-                              ></Avatar>
-                            </IconButton>
-                          </>
-                        ) : (
-                          <>
-                            <Button
-                              variant='contained'
-                              color='primary'
-                              sx={{
-                                mr: { xs: 0, sm: 1 },
-                                display: {
-                                  xs: 'none',
-                                  sm: 'none',
-                                  md: 'none',
-                                  lg: 'inline-flex',
-                                  xl: 'inline-flex',
-                                },
-                              }}
-                              href='/signin'
-                            >
-                              Sing in
-                            </Button>
-                            <Button
-                              sx={{
-                                mr: { xs: 0, sm: 1 },
-                                display: {
-                                  xs: 'none',
-                                  sm: 'none',
-                                  md: 'none',
-                                  lg: 'inline-flex',
-                                  xl: 'inline-flex',
-                                },
-                              }}
-                              variant='contained'
-                              color='secondary'
-                              href='/signup'
-                            >
-                              Sign up
-                            </Button>
-
-                            <IconButton
-                              sx={{
-                                display: {
-                                  xs: 'inline-flex',
-                                  sm: 'inline-flexe',
-                                  md: 'inline-flexe',
-                                  lg: 'none',
-                                  xl: 'none',
-                                },
-                              }}
-                              color='milk'
-                              size='large'
-                              href='/signin'
-                            >
-                              <AccountCircleIcon fontSize='large' />
-                            </IconButton>
-                          </>
-                        )}
-                      </Typography>
-                    </Grid>
+                    </Box>
                   </Grid>
-                </Toolbar>
-              </Container>
-            </AppBar>
-          </Box>
+                  {/* CENTER */}
+                  <Grid
+                    item
+                    lx={2}
+                    lg={2}
+                    md={2}
+                    sm={8}
+                    xs={8}
+                  >
+                    <Box
+                      flexGrow={1}
+                      className={'logoNav'}
+                    >
+                      <a
+                        href='/'
+                      >
+                        <img src={`${logo}`} width={'90px'} height={'20px'}></img>
+                      </a>
+                    </Box>
+                  </Grid>
+                  {/*RIGHT SIDE*/}
+                  <Grid item lx={5} lg={5} md={5} sm={2} xs={2} sx={{
+                    paddingTop: {
+                      xs: 0,
+                      sm: 0,
+                      md: 0,
+                      lg: `${10}px`,
+                      xl: `${10}px`,
+                    },
+                  }}>
+                    <Typography align='right' flexGrow={1} component='div'>
+                      <Box
+                        display={{
+                          xs: 'none',
+                          sm: 'none',
+                          md: 'none',
+                          lg: 'inline-flex',
+                          xl: 'inline-flex',
+                        }}
+                      >
+                        <InputBase placeholder='Search Anime' />
+                        <IconButton>
+                          <Search />
+                        </IconButton>
+                      </Box>
+                      {this.state.signIn === true ? (
+                        <>
+                          <IconButton
+                            color='main'
+                            onClick={() =>
+                              this.handleShowDrawer('right', true)
+                            }
+                            sx={{ display: 'inline-flex' }}
+                          >
+                            <Avatar
+                              className='avatar'
+                              src={this.state.profileImage}
+                              sx={{
+                                width: 45,
+                                height: 45,
+                              }}
+                            ></Avatar>
+                          </IconButton>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            sx={{
+                              mr: { xs: 0, sm: 1 },
+                              display: {
+                                xs: 'none',
+                                sm: 'none',
+                                md: 'none',
+                                lg: 'inline-flex',
+                                xl: 'inline-flex',
+                              },
+                            }}
+                            variant='contained'
+                            color='primary'
+                            href='/signin'
+                          >
+                            Sing in
+                          </Button>
+                          <Button
+                            sx={{
+                              mr: { xs: 0, sm: 1 },
+                              display: {
+                                xs: 'none',
+                                sm: 'none',
+                                md: 'none',
+                                lg: 'inline-flex',
+                                xl: 'inline-flex',
+                              },
+                            }}
+                            variant='contained'
+                            color='secondary'
+                            href='/signup'
+                          >
+                            Sign up
+                          </Button>
 
-          <DrawerMenu
-            open={this.state.showDrawerLeft}
-            side={'left'}
-            onClose={() => this.handleShowDrawer('left', false)}
-            content={<DrawerLeft subscribe={this.state.user.subscribe} />}
-          />
-          <DrawerMenu
-            open={this.state.showDrawerRight}
-            side={'right'}
-            onClose={() => this.handleShowDrawer('right', false)}
-            content={
-              <DrawerRight
-                signIn={this.state.signIn}
-                displayName={this.state.displayName}
-                email={this.state.email}
-                profileImage={this.state.profileImage}
-                backgroundImage={this.state.backgroundImage}
-              />
-            }
-          />
-        </ThemeProvider>
+
+                          <IconButton
+                            sx={{
+                              display: {
+                                xs: 'inline-flex',
+                                sm: 'inline-flexe',
+                                md: 'inline-flexe',
+                                lg: 'none',
+                                xl: 'none',
+                              },
+                            }}
+                            color='milk'
+                            size='large'
+                            href='/signin'
+                          >
+                            <AccountCircleIcon fontSize='large' />
+                          </IconButton>
+                        </>
+                      )}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Toolbar>
+            </Container>
+          </AppBar>
+        </Box>
+
+        <DrawerMenu
+          open={this.state.showDrawerLeft}
+          side={'left'}
+          onClose={() => this.handleShowDrawer('left', false)}
+          content={<DrawerLeft subscribe={this.state.user.subscribe} />}
+        />
+        <DrawerMenu
+          open={this.state.showDrawerRight}
+          side={'right'}
+          onClose={() => this.handleShowDrawer('right', false)}
+          content={
+            <DrawerRight
+              signIn={this.state.signIn}
+              displayName={this.state.displayName}
+              email={this.state.email}
+              profileImage={this.state.profileImage}
+              backgroundImage={this.state.backgroundImage}
+            />
+          }
+        />
       </>
     );
   }

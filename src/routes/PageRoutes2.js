@@ -13,25 +13,19 @@ import CssBaseline from '@mui/material/CssBaseline';
 import DefaultTheme from '../components/Themes/DefaultTheme';
 import AnimePage from '../components/AnimePage/AnimePage';
 import ResetPassword from '../components/ResetPassword/ResetPassword';
+import CardAnime from '../components/Card/CardAnime';
 
-class PageRoutes extends Component {
+class PageRoutes2 extends Component {
   render() {
     return (
       <ThemeProvider theme={DefaultTheme}>
         <CssBaseline />
         <Routes>
-          <Route path='/' element={<HomePage />} />
-          <Route path='/signup' element={<SignUp />} />
-          <Route path='/signin' element={<Signin />} />
-          <Route path='/registration' element={<UserDataRegistration />} />
-          <Route path='/customizedSearch' element={<CustomizedSearch />} />
-          <Route path='/Profile' element={<Profile />} />
-          <Route path='/Anime/:id' element={<AnimePage />} />
-          <Route path='/ResetPassword' element={<ResetPassword />} />
+          <Route path='/' element={<CardAnime />} />
         </Routes>
       </ThemeProvider>
     );
   }
 }
 
-export default PageRoutes;
+export default PageRoutes2;

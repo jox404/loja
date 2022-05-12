@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Container, Divider, Grid, IconButton, Input, List, ListItem, Typography } from "@mui/material";
+import { Avatar, Box, Button, Container, Grid, IconButton, Input, List, ListItem, Typography } from "@mui/material";
 import { React, Component } from "react";
 import NavBar from "../NavBar/NavBar";
 
@@ -10,6 +10,9 @@ import { db } from "../../connections/firebase";
 //ICONS MUI
 /* import SendIcon from '@mui/icons-material/Send'; */
 import { AccessTime, Delete, HistorySharp, PhotoCamera, Send, Star, Visibility } from "@mui/icons-material";
+
+//HANDLE SIZE IMAGE
+import Resizer from "react-image-file-resizer";
 
 //CSS
 import './style/style.css'
@@ -27,15 +30,7 @@ class Profile extends Component {
             firstName: '',
             lastName: '',
             txtValue: '',
-            animesIformation: {
-                later: '',
-                Watching: '',
-                Favorites: '',
-                Watched: '',
-                Dropped: '',
-            },
-
-
+            animesInfo: {},
         }
     }
 
@@ -45,9 +40,19 @@ class Profile extends Component {
 
         const file = e.target.files[0]
 
-        this.setState({
-            backgroundImageFile: file,
-        })
+        Resizer.imageFileResizer(file, 600,
+            200,
+            "JPEG",
+            100,
+            0,
+            (uri) => {
+                console.log(uri);
+                this.setState({ backgroundImageFile: uri });
+            },
+            "file",
+            200,
+            200
+        )
     }
 
     //PROFILE IMAGE
@@ -56,19 +61,34 @@ class Profile extends Component {
 
         const file = e.target.files[0]
 
-        this.setState({
-            profileImageFile: file
-        })
+        Resizer.imageFileResizer(file, 60,
+            60,
+            "JPEG",
+            50,
+            0,
+            (uri) => {
+                console.log(uri);
+                this.setState({ profileImageFile: uri });
+            },
+            "file",
+            200,
+            200
+        )
+        console.log('newImg', this.state.profileImage)
+
     }
 
     //SEND IMAGES BACKGROUND AND PROFILE
     async handleSendImage(file, fileName) {
+
         const user = getAuth()
         const imageName = user.currentUser.uid
 
         const storage = getStorage()
-        const imageRef = ref(storage, `${fileName}Images/` + `${imageName}${fileName}`)
+        const imageRef = ref(storage, `${fileName}Images/${imageName}${fileName}`)
+
         await uploadBytes(imageRef, file).then((res) => {
+            console.log(res)
             return res
         })
 
@@ -80,7 +100,7 @@ class Profile extends Component {
             //SEND URL TO USER DOC
             updateDoc(usersRef, { [path]: `${imageUrl}` })
         })
-        window.location.reload()
+        window.location.reload() //COMITADO PARA TESTES
     }
 
     //GET USER DATA
@@ -90,11 +110,11 @@ class Profile extends Component {
         const auth = getAuth()
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log(user)
+
                 const uid = user.uid
                 const docRef = doc(db, 'users/', uid)
 
-                const docSnap = getDoc(docRef).then((res) => {
+                getDoc(docRef).then((res) => {
                     const data = res._document.data.value.mapValue.fields
                     this.setState({
                         backgroundImage: data.backgroundImage.stringValue,
@@ -103,7 +123,19 @@ class Profile extends Component {
                         firstName: data.firstName.stringValue,
                         lastName: data.lastName.stringValue,
                     })
-                    console.log('profile', this.state.profileImage)
+
+                    const refAnimesInfo = res._document.data.value.mapValue.fields.animesInfo.mapValue.fields
+                    const animesInfo = {
+                        seeLater: refAnimesInfo.seeLater.integerValue,
+                        watching: refAnimesInfo.watching.integerValue,
+                        favorit: refAnimesInfo.favorit.integerValue,
+                        watched: refAnimesInfo.watched.integerValue,
+                        dropped: refAnimesInfo.dropped.integerValue,
+                    }
+
+                    this.setState({
+                        animesInfo: animesInfo
+                    })
                 })
             }
             else {
@@ -111,6 +143,9 @@ class Profile extends Component {
             }
         })
     }
+
+
+
     componentDidMount() {
         this.getUserData()
     }
@@ -118,55 +153,57 @@ class Profile extends Component {
     render() {
 
         return (
-            <>
+            <>{/* {xs:,sm:,md:,lg:,xl:} */}
                 <NavBar />
-                <Box className="profileBody" sx={{ maxHeight: '85vh' }}>
-                    <Box minHeight={300} sx={{
+
+                <Box className="profileBody" sx={{ maxHeight: '85vh' }} >
+
+                    <Box sx={{
+                        height: { xs: 200, sm: 350, md: 300, lg: 350, xl: 450 },
                         backgroundImage:
                             `url(${this.state.backgroundImage})`,
-                        backgroundSize: '1500px 500px',
-                    }} >
-                        <Box sx={{ justifyContent: 'left', display: 'flex', ml: 1 }}>
+                        backgroundSize: '100% 150%',
+                        backgroundRepeat: 'no-repeat'
+                    }} ><Container maxWidth={'xl'}>
+                            <Box sx={{ justifyContent: 'left', display: 'flex' }} className="inputProfile">
+                                <label htmlFor="inputImageProfile">
+                                    <Input onChange={(e) => this.handleGetImageProfile(e)} sx={{ display: 'none' }} accept="image/*"
+                                        id="inputImageProfile" type="file"
+                                    />
+                                    <IconButton color="primary" aria-label="upload picture" component="span"
+                                        sx={{ width: 150, height: 150 }}>
+                                        <Avatar className={'imgProfile'}
+                                            src={`${this.state.profileImage}`} />
+                                        <PhotoCamera sx={{ width: 60, height: 60, color: '#primary' }} className={'searchIcon'} />
+                                    </IconButton>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 1 }}>
+                                        <Button sx={{ display: `${this.state.profileImageFile === '' ? 'none' : 'inline-flex'}` }}
+                                            onClick={(e) => this.handleSendImage(this.state.profileImageFile, 'profile')} variant={'outlined'}
+                                            endIcon={<Send />} color={'yellow'} size={'small'}>
+                                            send
+                                        </Button>
+                                    </Box>
+                                </label>
 
-                            <label htmlFor="inputImageProfile">
-                                <Input onChange={(e) => this.handleGetImageProfile(e)} sx={{ display: 'none' }} accept="image/*"
-                                    id="inputImageProfile" type="file"
-                                />
-                                <IconButton color="primary" aria-label="upload picture" component="span"
-                                    sx={{ width: 150, height: 150, marginTop: 10 }}>
-                                    <Avatar sx={{ width: 150, height: 150, }} className={'imgProfile'}
-                                        src={`${this.state.profileImage}`} />
-                                    <PhotoCamera sx={{ width: 60, height: 60, color: '#primary' }} className={'searchIcon'} />
-                                </IconButton>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 1 }}>
-                                    <Button sx={{ display: `${this.state.profileImageFile === '' ? 'none' : 'inline-flex'}` }}
-                                        onClick={(e) => this.handleSendImage(this.state.profileImageFile, 'profile')} variant={'outlined'}
-                                        endIcon={<Send />} color={'yellow'} size={'small'}>
-                                        send
-                                    </Button>
-                                </Box>
-                            </label>
+                                <Typography component={'h1'} className="userName">{this.state.firstName}</Typography>
+                            </Box>
 
-                            <Typography sx={{ fontSize: { xs: 30, sm: 30, md: 50, lg: 50 }, mt: 20, fontFamily: 'Gotham Thin', color: "white" }}
-                            >Ana Guimarães</Typography>
-                        </Box>
-
-                        <Box>
-                            <label htmlFor="inputImageBg">
-                                <Input sx={{ display: 'none' }} accept="image/*" id="inputImageBg" type="file"
-                                    onChange={(e) => this.handleGetImageBg(e)} />
-                                <IconButton color="primary" aria-label="upload picture" component="span">
-                                    <PhotoCamera />
-                                </IconButton>
-                            </label>
-                        </Box>
-                        <Box>
-                            <Button variant='outlined' sx={{ display: `${this.state.backgroundImageFile === '' ? 'none' : 'inline-flex'}` }}
-                                onClick={(e) => this.handleSendImage(this.state.backgroundImageFile, 'background')} endIcon={<Send />} color={'yellow'} size={'small'}>
-                                Send
-                            </Button>
-                        </Box>
-
+                            <Box>
+                                <label htmlFor="inputImageBg">
+                                    <Input sx={{ display: 'none' }} accept="image/*" id="inputImageBg" type="file"
+                                        onChange={(e) => this.handleGetImageBg(e)} />
+                                    <IconButton color="primary" aria-label="upload picture" component="span">
+                                        <PhotoCamera />
+                                    </IconButton>
+                                </label>
+                            </Box>
+                            <Box>
+                                <Button variant='outlined' sx={{ display: `${this.state.backgroundImageFile === '' ? 'none' : 'inline-flex'}` }}
+                                    onClick={(e) => this.handleSendImage(this.state.backgroundImageFile, 'background')} endIcon={<Send />} color={'yellow'} size={'small'}>
+                                    Send
+                                </Button>
+                            </Box>
+                        </Container>
                     </Box>
                     {/* INFORMATIONS */}
                     <Container maxWidth={'xl'}>
@@ -178,10 +215,10 @@ class Profile extends Component {
                                         <Typography color={'primary'} variant="h6">PERSONAL INFORMATION</Typography>
 
                                         <List>
-                                            <ListItem><Typography color='teal'>First Name : {this.state.firstName}</Typography></ListItem>
-                                            <ListItem><Typography color='teal'>Last Name : {this.state.lastName}</Typography></ListItem>
-                                            <ListItem><Typography color='teal'>Email Address : {this.state.email}</Typography></ListItem>
-                                            <ListItem><Typography color='teal'>Nickname : {this.state.firstName}</Typography></ListItem>
+                                            <ListItem><Typography color='teal' className="userInfo">First Name : {this.state.firstName}</Typography></ListItem>
+                                            <ListItem><Typography color='teal' className="userInfo">Last Name : {this.state.lastName}</Typography></ListItem>
+                                            <ListItem><Typography color='teal' className="userInfo">Email Address : {this.state.email}</Typography></ListItem>
+                                            <ListItem><Typography color='teal' className="userInfo">Nickname : {this.state.firstName}</Typography></ListItem>
                                         </List>
 
                                     </Box>
@@ -192,11 +229,11 @@ class Profile extends Component {
                                         <Typography color={'primary'} variant="h6">ANIME INFORMATION</Typography>
 
                                         <List>
-                                            <ListItem><AccessTime color="error" /> <Typography ml={1}>Later : {'30'}</Typography></ListItem>
-                                            <ListItem><Visibility /><Typography ml={1}>Watching  : {'30'}</Typography></ListItem>
-                                            <ListItem><Star color='yellow' /> <Typography ml={1}>Favorites : {'30'}</Typography></ListItem>
-                                            <ListItem><HistorySharp color='teal' />  <Typography ml={1}>Watched : {'30'}</Typography></ListItem>
-                                            <ListItem><Delete color='secondary' /> <Typography ml={1}>Dropped : {'30'} </Typography></ListItem>
+                                            <ListItem><AccessTime color="error" /> <Typography ml={1} className={'userInfo'}>Later : {this.state.animesInfo.seeLater}</Typography></ListItem>
+                                            <ListItem><Visibility /><Typography ml={1} className={'userInfo'}>Watching  : {this.state.animesInfo.watching}</Typography></ListItem>
+                                            <ListItem><Star color='yellow' /> <Typography ml={1} className={'userInfo'}>Favorites : {this.state.animesInfo.favorit}</Typography></ListItem>
+                                            <ListItem><HistorySharp color='teal' />  <Typography ml={1} className={'userInfo'}>Watched : {this.state.animesInfo.watched}</Typography></ListItem>
+                                            <ListItem><Delete color='secondary' /> <Typography ml={1} className={'userInfo'}>Dropped : {this.state.animesInfo.dropped} </Typography></ListItem>
                                         </List>
 
                                     </Box>
@@ -208,7 +245,9 @@ class Profile extends Component {
                     <Box sx={{ justifyContent: 'space-around', display: 'flex' }}>
                         <Footer bgColor={"#383838"} color={"#F7F5F2"} colorDivider={"#0a66c2"} />
                     </Box>
+
                 </Box>
+
 
 
             </>
